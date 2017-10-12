@@ -7,9 +7,11 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"native-base": "^2.3.2",
 		"react": "16.0.0-beta.5",
 		"react-native": "0.49.3",
-		"react-native-maps": "*"
+		"react-native-maps": "*",
+		"react-native-vector-icons": "^4.4.2"
 	},
 	"devDependencies": {
 		"babel-jest": "21.2.0",

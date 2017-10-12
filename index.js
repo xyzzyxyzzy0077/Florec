@@ -1,4 +1,5 @@
 import { AppRegistry } from 'react-native';
-import Map from './components/Map';
+import Map from './components/Map.js';
+import App from './App.js'
 
-AppRegistry.registerComponent('Florec', () => Map);
+AppRegistry.registerComponent('Florec', () => App);
