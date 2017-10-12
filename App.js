@@ -6,11 +6,8 @@ import {
   View
 } from 'react-native';
 import MapView from 'react-native-maps'
-
 import StatusBar from './components/StatusBar';
 import ActionButton from './components/ActionButton';
-const styles = require('./styles.js');
-
 
 export default class Map extends Component {
 
@@ -69,3 +66,13 @@ export default class Map extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f2f2f2',
+    flex: 1,
+  },
+  map: {
+    flex:1
+  },
+})

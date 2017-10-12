@@ -1,8 +1,11 @@
 'use strict';
+
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-const styles = require('../styles.js')
-const { StyleSheet, Text, View} = ReactNative;
+const {
+  StyleSheet,
+  Text,
+  View} = ReactNative;
 
 class StatusBar extends Component {
   render() {
@@ -16,5 +19,27 @@ class StatusBar extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  navbar: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderBottomColor: '#eee',
+    borderColor: 'transparent',
+    borderWidth: 1,
+    justifyContent: 'center',
+    height: 44,
+    flexDirection: 'row'
+  },
+  navbarTitle: {
+    color: '#444',
+    fontSize: 16,
+    fontWeight: "500"
+  },
+  statusbar: {
+    backgroundColor: '#fff',
+    height: 22,
+  },
+})
 
 module.exports = StatusBar;
