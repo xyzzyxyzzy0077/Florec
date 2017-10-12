@@ -12,7 +12,7 @@ import ActionButton from './components/ActionButton';
 const styles = require('./styles.js');
 
 
-export default class App extends Component {
+export default class Map extends Component {
 
   constructor(props) {
     super(props);
@@ -69,5 +69,3 @@ export default class App extends Component {
     );
   }
 }
-
-AppRegistry.registerComponent('App', () => App);
