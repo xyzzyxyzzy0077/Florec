@@ -1,65 +1,73 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
-  Platform,
+  AppRegistry,
   StyleSheet,
   Text,
   View
 } from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
 import MapView from 'react-native-maps'
 
-export default class App extends Component<{}> {
+import StatusBar from './components/StatusBar';
+import ActionButton from './components/ActionButton';
+const styles = require('./styles.js');
+
+
+export default class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+    }
+  }
+
+  /**
+   * Ref: https://facebook.github.io/react-native/docs/geolocation.html
+   */
+  getAndUpdateLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (data) => {
+        const region = {
+          latitude: data.coords.latitude,
+          longitude: data.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        };
+
+        this.setState({
+          region
+        });
+      },
+      (err) => {
+        console.log('err', err);
+      },
+      {}
+    );
+  }
+
+  onRegionChange(region) {
+    this.setState({ region });
+  }
+
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar title="Florec"/>
+        <ActionButton title="Find me!" onPress={() => this.getAndUpdateLocation()} />
         <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}/>
+          style={styles.map}
+          region={this.state.region}
+          onRegionChange={(region) => this.onRegionChange(region)}
+        />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  map: {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    position: 'absolute'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+AppRegistry.registerComponent('App', () => App);
