@@ -6,8 +6,8 @@ import {
   View
 } from 'react-native';
 import MapView from 'react-native-maps'
-import StatusBar from './components/StatusBar';
-import ActionButton from './components/ActionButton';
+import StatusBar from './StatusBar';
+import ActionButton from './ActionButton';
 
 export default class Map extends Component {
 
