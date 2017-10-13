@@ -3,20 +3,20 @@ import React, {Component} from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  TextInput,
-  View,
   AsyncStorage
 } from 'react-native';
 
+import { Container, Header, Content, Icon, Form, Item, Input, Label, Button, Text, Spinner} from 'native-base';
+
 import Register from './RegisterPage.js';
 import Account from './AccountPage.js';
-
 import firebaseApp from '../components/Firebase.js';
 
-import styles from '../src/common-styles.js';
-
 export default class Login extends Component {
+
+  static navigationOptions = {
+    header: null
+  }
 
   constructor(props){
     super(props);
@@ -28,66 +28,34 @@ export default class Login extends Component {
     }
   }
 
-  render(){
-    return (
-      <View style={styles.container}>
-        <Header text="Login" loaded={this.state.loaded} />
-        <View style={styles.body}>
-          <TextInput
-            style={styles.textinput}
-            onChangeText={(text) => this.setState({email: text})}
-            value={this.state.email}
-            placeholder={"Email Address"}
-          />
-          <TextInput
-            style={styles.textinput}
-            onChangeText={(text) => this.setState({password: text})}
-            value={this.state.password}
-            secureTextEntry={true}
-            placeholder={"Password"}
-          />
-
-          <Button
-            text="Login"
-            onpress={this.login.bind(this)}
-            button_styles={styles.primary_button}
-            button_text_styles={styles.primary_button_text} />
-
-          <Button
-            text="New here?"
-            onpress={this.goToSignup.bind(this)}
-            button_styles={styles.transparent_button}
-            button_text_styles={styles.transparent_button_text} />
-        </View>
-      </View>
-    );
-  }
-
   login(){
 
     this.setState({
       loaded: false
     });
 
-    app.authWithPassword({
-      "email": this.state.email,
-      "password": this.state.password
-    }, (error, user_data) => {
-
+    firebaseApp.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
+    .then(() => {
       this.setState({
+        error: '',
+        loading: true
+      });
+      AsyncStorage.setItem('@UserData:Email', JSON.stringify(firebaseApp.auth().currentUser.email));
+      alert('Login success!')
+      alert(firebaseApp.auth().currentUser.email)
+      this.setState({
+        email: '',
+        password: '',
         loaded: true
       });
-
-      if(error){
-        alert('Login Failed. Please try again');
-      }else{
-        AsyncStorage.setItem('user_data', JSON.stringify(user_data));
-        this.props.navigator.push({
-          component: Account
-        });
-      }
+    })
+    .catch((error) => {
+      alert(error.message)
+      this.setState({
+        error: 'Login Failed',
+        loading: false
+      });
     });
-
 
   }
 
@@ -96,7 +64,43 @@ export default class Login extends Component {
       component: Signup
     });
   }
+  render(){
+    const {navigate} = this.props.navigation
+    return (
+      <Container>
+        <Header/>
+        <Content>
+          <Form>
+          <Item floatingLabel>
+            <Label>Username</Label>
+              <Icon active name='ios-flower' />
+              <Input
+              value = {this.state.email}
+              onChangeText={(text) => this.setState({email: text})}/>
+            </Item>
+            <Item floatingLabel>
+              <Icon active name='ios-lock' />
+              <Label>Password</Label>
+              <Input
+              value={this.state.password}
+              onChangeText={(text) => this.setState({password: text})}
+              secureTextEntry = {true} />
+            </Item>
+          </Form>
 
+          <Button full style={{marginTop: 30}}
+            onPress={this.login.bind(this)}>
+            <Text>Login</Text>
+          </Button>
+
+          <Button full light style={{marginTop: 10}}
+            onPress={() => navigate('Register')}>
+            <Text>Register</Text>
+          </Button>
+        </Content>
+      </Container>
+    );
+  }
 }
 
 AppRegistry.registerComponent('Login', () => Login);

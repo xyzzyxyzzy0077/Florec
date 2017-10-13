@@ -14,54 +14,34 @@ import Register from './pages/RegisterPage.js'
 import Account from './pages/AccountPage.js'
 import Map from './pages/MapPage.js'
 import { StackNavigator } from 'react-navigation'
+import firebaseApp from './components/Firebase.js'
 
-var test
-
-export default class Florec extends Component<{}> {
-
-  static navigationOptions = {
-    header: null
-  }
-
-  constructor(props){
-    super(props)
-    this.state = {
-      component: null,
-      loaded: false
-    }
-    test = this.state.component
-  }
-
-  componentWillMount(){
-
-    AsyncStorage.getItem('user_data').then((user_data_json) => {
-
-      let user_data = JSON.parse(user_data_json);
-      let component = {component: Register};
-      if(user_data != null){
-        firebaseApp.authWithCustomToken(user_data.token, (error, authData) => {
-          if(error){
-            this.setState(component);
-            test = this.state.component
-          }else{
-            this.setState({component: Account});
-            test = this.state.component
-          }
-        });
-      }else{
-        this.setState(component);
-        test = this.state.component
-      }
-    });
-  }
-
+const navigationOptions = {
+  header: null
 }
 
+let checkSignedIn = function() {
+  AsyncStorage.getItem('@UserData:Email',(err, data) => {
+    if(err) {
+      console.error('Error loading user', err)
+      return true
+    } else {
+      if(data == null){
+        return true
+      }
+      else {
+        return false
+      }
+    }
+  })
+}
   const StackNav = StackNavigator({
-    Register: {screen: Register},
     Main: {screen: Map},
+    Login: {screen: Login},
+    Register: {screen: Register},
+    Account: {screen: Account}
   },{
-    initialRouteName: test != Register ? 'Register':'Main'
+    initialRouteName: !checkSignedIn() ? 'Login' : 'Main'
   })
 
-AppRegistry.registerComponent('Florec', () => Florec);
+AppRegistry.registerComponent('Florec', () => StackNav);
