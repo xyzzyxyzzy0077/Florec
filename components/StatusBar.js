@@ -1,11 +1,10 @@
-'use strict';
-
 import React, {Component} from 'react';
-import ReactNative from 'react-native';
-const {
+import {
   StyleSheet,
   Text,
-  View} = ReactNative;
+  View,
+  TouchableHighlight
+} from 'react-native'
 
 class StatusBar extends Component {
   render() {

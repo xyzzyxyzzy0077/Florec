@@ -1,14 +1,10 @@
-'use strict';
-
 import React, {Component} from 'react';
-import ReactNative from 'react-native';
-
-const {
+import {
   StyleSheet,
   Text,
   View,
   TouchableHighlight
-} = ReactNative;
+} from 'react-native'
 
 class ActionButton extends Component {
   render() {
