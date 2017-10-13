@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
+import {
+  Container,
+  Body,
+  Title,
+  Header,
+  Content,
+  Icon,
+  Button,
+  Text} from 'native-base';
 import MapView from 'react-native-maps'
-import StatusBar from '../components/StatusBar';
 import ActionButton from '../components/ActionButton';
 
 export default class Map extends Component {
@@ -58,15 +65,22 @@ export default class Map extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar title="Florec"/>
-        <ActionButton title="Find me!" onPress={() => this.getAndUpdateLocation()} />
+      <Container style={styles.container}>
+        <Header>
+          <Body>
+          <Title>Florec</Title>
+          </Body>
+        </Header>
+
+        <Button full onPress={() => this.getAndUpdateLocation()}>
+        <Text>Find me!</Text>
+        </Button>
         <MapView
           style={styles.map}
           region={this.state.region}
           onRegionChange={(region) => this.onRegionChange(region)}
         />
-      </View>
+      </Container>
     );
   }
 }

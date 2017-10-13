@@ -14,7 +14,7 @@ import firebaseApp from '../components/Firebase.js'
 export default class Register extends Component {
 
   static navigationOptions = {
-    header: null
+    title: 'Register!'
   }
 
   constructor(props){
@@ -65,13 +65,14 @@ export default class Register extends Component {
   }
 
   render() {
+    const {navigate} = this.props.navigation
     return (
+
       <Container>
-        <Header/>
         <Content>
           <Form>
-          <Item floatingLabel>
-            <Label>Username</Label>
+            <Item floatingLabel>
+              <Label>Email Address</Label>
               <Icon active name='ios-flower' />
               <Input
               value = {this.state.email}
@@ -90,11 +91,6 @@ export default class Register extends Component {
           <Button full style={{marginTop: 30}}
             onPress={this.signup.bind(this)}>
             <Text>Register</Text>
-          </Button>
-
-          <Button full light style={{marginTop: 10}}
-            onPress={this.goToLogin.bind(this)}>
-            <Text>Login</Text>
           </Button>
         </Content>
       </Container>

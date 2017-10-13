@@ -41,7 +41,7 @@ let checkSignedIn = function() {
     Register: {screen: Register},
     Account: {screen: Account}
   },{
-    initialRouteName: !checkSignedIn() ? 'Login' : 'Main'
+    initialRouteName: checkSignedIn() ? 'Login' : 'Main'
   })
 
 AppRegistry.registerComponent('Florec', () => StackNav);

@@ -8,6 +8,7 @@ import {
 
 import { Container, Header, Content, Icon, Form, Item, Input, Label, Button, Text, Spinner} from 'native-base';
 
+import { Col, Row, Grid } from "react-native-easy-grid";
 import Register from './RegisterPage.js';
 import Account from './AccountPage.js';
 import firebaseApp from '../components/Firebase.js';
@@ -68,11 +69,12 @@ export default class Login extends Component {
     const {navigate} = this.props.navigation
     return (
       <Container>
-        <Header/>
-        <Content>
+      <Header />
+       <Content contentContainerStyle={{flex: 1}}>
+
           <Form>
           <Item floatingLabel>
-            <Label>Username</Label>
+            <Label>Email Address</Label>
               <Icon active name='ios-flower' />
               <Input
               value = {this.state.email}
@@ -97,8 +99,10 @@ export default class Login extends Component {
             onPress={() => navigate('Register')}>
             <Text>Register</Text>
           </Button>
+
         </Content>
-      </Container>
+        </Container>
+
     );
   }
 }
