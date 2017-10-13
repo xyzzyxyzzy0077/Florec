@@ -6,10 +6,14 @@ import {
   View
 } from 'react-native';
 import MapView from 'react-native-maps'
-import StatusBar from './StatusBar';
-import ActionButton from './ActionButton';
+import StatusBar from '../components/StatusBar';
+import ActionButton from '../components/ActionButton';
 
 export default class Map extends Component {
+
+  static navigationOptions = {
+    header: null
+  }
 
   constructor(props) {
     super(props);

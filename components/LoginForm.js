@@ -1,21 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Header,  Content, Icon, Form, Item, Input, Label, Button, Text, Spinner} from 'native-base';
 
-import * as firebase from 'firebase'
-import {
-  FireBase_API_KEY,
-  FireBase_AUTH_DOMAIN,
-  FireBase_DATABASE_URL,
-  FireBase_STORAGE_BUCKET
-} from 'react-native-dotenv';
-
-const firebaseConfig = {
-  apiKey: FireBase_API_KEY,
-  authDomain: FireBase_AUTH_DOMAIN,
-  databaseURL: FireBase_DATABASE_URL,
-  storageBucket: FireBase_STORAGE_BUCKET,
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import firebaseApp from './Firebase.js'
 
 export default class LoginForm extends Component {
 
@@ -42,6 +28,7 @@ export default class LoginForm extends Component {
               error: '',
               loading: false
             });
+            alert('Account created!');
           })
           .catch(() => {
             this.setState({
