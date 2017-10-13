@@ -33,6 +33,8 @@ export default class Map extends Component {
         longitudeDelta: 0.0421,
       },
     }
+
+    this.getAndUpdateLocation()
   }
 
   /**
@@ -71,15 +73,15 @@ export default class Map extends Component {
           <Title>Florec</Title>
           </Body>
         </Header>
-
-        <Button full onPress={() => this.getAndUpdateLocation()}>
-        <Text>Find me!</Text>
-        </Button>
         <MapView
           style={styles.map}
           region={this.state.region}
-          onRegionChange={(region) => this.onRegionChange(region)}
+          
         />
+        <Button full onPress={() => this.getAndUpdateLocation()}>
+        <Text>Find me!</Text>
+        </Button>
+
       </Container>
     );
   }
