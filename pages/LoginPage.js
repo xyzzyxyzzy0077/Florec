@@ -6,7 +6,18 @@ import {
   AsyncStorage
 } from 'react-native';
 
-import { Container, Header, Content, Icon, Form, Item, Input, Label, Button, Text, Spinner} from 'native-base';
+import {
+  Container,
+  Header,
+  Content,
+  Icon,
+  Form,
+  Item,
+  Input,
+  Label,
+  Button,
+  Text
+} from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Register from './RegisterPage.js';
@@ -60,19 +71,18 @@ export default class Login extends Component {
 
   }
 
-  goToSignup(){
-    this.props.navigator.push({
-      component: Signup
-    });
-  }
+
   render(){
     const {navigate} = this.props.navigation
     return (
       <Container>
-      <Header />
-       <Content contentContainerStyle={{flex: 1}}>
-
-          <Form>
+       <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
+       <Grid style={{alignItems: 'center'}}>
+        <Row>
+          <Text>TODO: Add icon</Text>
+        </Row>
+        <Row>
+          <Form style={{flex: 1, alignItems: 'center'}}>
           <Item floatingLabel>
             <Label>Email Address</Label>
               <Icon active name='ios-flower' />
@@ -89,13 +99,15 @@ export default class Login extends Component {
               secureTextEntry = {true} />
             </Item>
           </Form>
+        </Row>
+        </Grid>
 
-          <Button full style={{marginTop: 30}}
+          <Button full
             onPress={this.login.bind(this)}>
             <Text>Login</Text>
           </Button>
 
-          <Button full light style={{marginTop: 10}}
+          <Button full light style={{marginTop: 10, marginBottom: 30}}
             onPress={() => navigate('Register')}>
             <Text>Register</Text>
           </Button>
