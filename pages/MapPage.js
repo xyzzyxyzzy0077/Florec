@@ -16,7 +16,7 @@ import {
   FooterTab,
   Text} from 'native-base';
 import MapView from 'react-native-maps'
-import ActionButton from '../components/ActionButton';
+
 
 export default class Map extends Component {
 
@@ -37,7 +37,7 @@ export default class Map extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getAndUpdateLocation()
   }
 
@@ -62,7 +62,7 @@ export default class Map extends Component {
     );
   }
 
-  onRegionChange(region) {
+  onRegionChangeComplete(region) {
     this.setState({ region });
   }
 
@@ -78,8 +78,9 @@ export default class Map extends Component {
           style={styles.map}
           region={this.state.region}
           showsUserLocation = {true}
-          followsUserLocation = {true}
           showsMyLocationButton = {true}
+          followsUserLocation = {true}
+
         >
           <MapView.Marker
             coordinate={{
@@ -89,14 +90,17 @@ export default class Map extends Component {
             draggable
           />
         </MapView>
-        <Button full onPress={() => this.getAndUpdateLocation()}>
-        <Text>Find me!</Text>
+
+        <Button rounded
+          onPress={() => this.getAndUpdateLocation()}
+          style={styles.locateButton}>
+          <Icon name="locate"/>
         </Button>
 
         <Footer>
           <FooterTab>
             <Button active>
-              <Icon active name="navigate" />
+              <Icon active name="compass" />
             </Button>
             <Button>
               <Icon name="person" />
@@ -117,4 +121,13 @@ const styles = StyleSheet.create({
   map: {
     flex:1
   },
+  locateButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 20,
+    height: 53,
+    borderRadius: 100,
+    backgroundColor: 'rgba(0,0,0,0.5)'
+
+  }
 })
