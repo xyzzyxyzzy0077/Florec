@@ -31,25 +31,24 @@ export default class Map extends Component {
       region: {
         latitude: 37.78825,
         longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.0022,
+        longitudeDelta: 0.0048,
       },
     }
+  }
 
+  componentWillMount() {
     this.getAndUpdateLocation()
   }
 
-  /**
-   * Ref: https://facebook.github.io/react-native/docs/geolocation.html
-   */
   getAndUpdateLocation() {
     navigator.geolocation.getCurrentPosition(
       (data) => {
         const region = {
           latitude: data.coords.latitude,
           longitude: data.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0022,
+          longitudeDelta: 0.0048,
         };
 
         this.setState({
@@ -72,16 +71,15 @@ export default class Map extends Component {
       <Container style={styles.container}>
         <Header>
           <Body>
-          <Title>Florec</Title>
+            <Title>Florec</Title>
           </Body>
         </Header>
         <MapView
           style={styles.map}
           region={this.state.region}
-          showsUserLocation
-          followsUserLocation
-          showsMyLocationButton
-          minZoomLevel = {15}
+          showsUserLocation = {true}
+          followsUserLocation = {true}
+          showsMyLocationButton = {true}
         >
           <MapView.Marker
             coordinate={{
