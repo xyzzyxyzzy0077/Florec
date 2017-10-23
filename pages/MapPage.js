@@ -12,6 +12,8 @@ import {
   Content,
   Icon,
   Button,
+  Footer,
+  FooterTab,
   Text} from 'native-base';
 import MapView from 'react-native-maps'
 import ActionButton from '../components/ActionButton';
@@ -76,11 +78,33 @@ export default class Map extends Component {
         <MapView
           style={styles.map}
           region={this.state.region}
-          
-        />
+          showsUserLocation
+          followsUserLocation
+          showsMyLocationButton
+          minZoomLevel = {15}
+        >
+          <MapView.Marker
+            coordinate={{
+              latitude: 31.2295,
+              longitude: 121.4728,
+            }}
+            draggable
+          />
+        </MapView>
         <Button full onPress={() => this.getAndUpdateLocation()}>
         <Text>Find me!</Text>
         </Button>
+
+        <Footer>
+          <FooterTab>
+            <Button active>
+              <Icon active name="navigate" />
+            </Button>
+            <Button>
+              <Icon name="person" />
+            </Button>
+          </FooterTab>
+        </Footer>
 
       </Container>
     );
