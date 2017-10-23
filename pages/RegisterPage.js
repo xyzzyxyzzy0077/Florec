@@ -6,7 +6,18 @@ import {
   View
 } from 'react-native';
 
-import { Container, Header, Content, Icon, Form, Item, Input, Label, Button, Text, Spinner} from 'native-base';
+import {
+  Container,
+  Header,
+  Content,
+  Icon,
+  Form,
+  Item,
+  Input,
+  Label,
+  Button,
+  Text
+} from 'native-base';
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
