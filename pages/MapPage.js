@@ -12,9 +12,11 @@ import {
   Content,
   Icon,
   Button,
+  Footer,
+  FooterTab,
   Text} from 'native-base';
 import MapView from 'react-native-maps'
-import ActionButton from '../components/ActionButton';
+
 
 export default class Map extends Component {
 
@@ -29,23 +31,24 @@ export default class Map extends Component {
       region: {
         latitude: 37.78825,
         longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.0022,
+        longitudeDelta: 0.0048,
       },
     }
   }
 
-  /**
-   * Ref: https://facebook.github.io/react-native/docs/geolocation.html
-   */
+  componentDidMount() {
+    this.getAndUpdateLocation()
+  }
+
   getAndUpdateLocation() {
     navigator.geolocation.getCurrentPosition(
       (data) => {
         const region = {
           latitude: data.coords.latitude,
           longitude: data.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0022,
+          longitudeDelta: 0.0048,
         };
 
         this.setState({
@@ -59,7 +62,7 @@ export default class Map extends Component {
     );
   }
 
-  onRegionChange(region) {
+  onRegionChangeComplete(region) {
     this.setState({ region });
   }
 
@@ -68,18 +71,43 @@ export default class Map extends Component {
       <Container style={styles.container}>
         <Header>
           <Body>
-          <Title>Florec</Title>
+            <Title>Florec</Title>
           </Body>
         </Header>
-
-        <Button full onPress={() => this.getAndUpdateLocation()}>
-        <Text>Find me!</Text>
-        </Button>
         <MapView
           style={styles.map}
           region={this.state.region}
-          onRegionChange={(region) => this.onRegionChange(region)}
-        />
+          showsUserLocation = {true}
+          showsMyLocationButton = {true}
+          followsUserLocation = {true}
+
+        >
+          <MapView.Marker
+            coordinate={{
+              latitude: 31.2295,
+              longitude: 121.4728,
+            }}
+            draggable
+          />
+        </MapView>
+
+        <Button rounded
+          onPress={() => this.getAndUpdateLocation()}
+          style={styles.locateButton}>
+          <Icon name="locate"/>
+        </Button>
+
+        <Footer>
+          <FooterTab>
+            <Button active>
+              <Icon active name="compass" />
+            </Button>
+            <Button>
+              <Icon name="person" />
+            </Button>
+          </FooterTab>
+        </Footer>
+
       </Container>
     );
   }
@@ -93,4 +121,13 @@ const styles = StyleSheet.create({
   map: {
     flex:1
   },
+  locateButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 20,
+    height: 53,
+    borderRadius: 100,
+    backgroundColor: 'rgba(0,0,0,0.5)'
+
+  }
 })

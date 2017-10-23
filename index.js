@@ -36,12 +36,12 @@ let checkSignedIn = function() {
   })
 }
   const StackNav = StackNavigator({
-    Main: {screen: Map},
+    Map: {screen: Map},
     Login: {screen: Login},
     Register: {screen: Register},
     Account: {screen: Account}
   },{
-    initialRouteName: checkSignedIn() ? 'Login' : 'Main'
+    initialRouteName: !checkSignedIn() ? 'Login' : 'Map'
   })
 
 AppRegistry.registerComponent('Florec', () => StackNav);
