@@ -29,7 +29,9 @@ import firebaseApp from '../components/Firebase.js'
 export default class Register extends Component {
 
   static navigationOptions = {
-    title: 'Register'
+    title: 'Register',
+    headerBackTitleStyle: {color: 'black',},
+    headerTintColor: 'black',
   }
 
   constructor(props){
@@ -147,7 +149,7 @@ export default class Register extends Component {
           </Grid>
 
           <Button block
-            style={{marginTop: 30}}
+            style={styles.OKbutton}
             onPress={this.signup.bind(this)}>
             <Text>OK</Text>
           </Button>
@@ -156,5 +158,11 @@ export default class Register extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  OKbutton: {
+    backgroundColor: '#7acc31'
+  }
+})
 
 AppRegistry.registerComponent('Register', () => Register);
