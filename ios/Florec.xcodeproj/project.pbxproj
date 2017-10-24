@@ -254,35 +254,35 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		A74C65B11F9F56B20099DE64 /* PBXContainerItemProxy */ = {
+		A74C65E31F9F59410099DE64 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = ADD01A681E09402E00F6D226;
 			remoteInfo = "RCTBlob-tvOS";
 		};
-		A74C65C31F9F56B20099DE64 /* PBXContainerItemProxy */ = {
+		A74C65F51F9F59410099DE64 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 3DBE0D001F3B181A0099AA32;
 			remoteInfo = fishhook;
 		};
-		A74C65C51F9F56B20099DE64 /* PBXContainerItemProxy */ = {
+		A74C65F71F9F59410099DE64 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 3DBE0D0D1F3B181C0099AA32;
 			remoteInfo = "fishhook-tvOS";
 		};
-		A74C65CC1F9F56B30099DE64 /* PBXContainerItemProxy */ = {
+		A74C65FE1F9F59420099DE64 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E1408AF31AA7443FB622B330 /* AirMaps.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 11FA5C511C4A1296003AC2EE;
 			remoteInfo = AirMaps;
 		};
-		A74C65CF1F9F56B30099DE64 /* PBXContainerItemProxy */ = {
+		A74C66011F9F59420099DE64 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FEAE6A47BD0344A0831F1386 /* RNVectorIcons.xcodeproj */;
 			proxyType = 2;
@@ -482,8 +482,8 @@
 			children = (
 				139FDEF41B06529B00C62182 /* libRCTWebSocket.a */,
 				3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */,
-				A74C65C41F9F56B20099DE64 /* libfishhook.a */,
-				A74C65C61F9F56B20099DE64 /* libfishhook-tvOS.a */,
+				A74C65F61F9F59410099DE64 /* libfishhook.a */,
+				A74C65F81F9F59410099DE64 /* libfishhook-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -603,7 +603,7 @@
 				00E356EF1AD99517003FC87E /* FlorecTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				4BE14C7317E548D692EC19BA /* Resources */,
-				A74C65AB1F9F56B10099DE64 /* Recovered References */,
+				A74C65DD1F9F59410099DE64 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -621,7 +621,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A74C65AB1F9F56B10099DE64 /* Recovered References */ = {
+		A74C65DD1F9F59410099DE64 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				811C2381A64B4E80A8A41A05 /* libAirMaps.a */,
@@ -630,18 +630,18 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		A74C65C71F9F56B20099DE64 /* Products */ = {
+		A74C65F91F9F59420099DE64 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A74C65D01F9F56B30099DE64 /* libRNVectorIcons.a */,
+				A74C65FF1F9F59420099DE64 /* libAirMaps.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A74C65C91F9F56B20099DE64 /* Products */ = {
+		A74C65FB1F9F59420099DE64 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A74C65CD1F9F56B30099DE64 /* libAirMaps.a */,
+				A74C66021F9F59420099DE64 /* libRNVectorIcons.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -650,7 +650,7 @@
 			isa = PBXGroup;
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
-				A74C65B21F9F56B20099DE64 /* libRCTBlob-tvOS.a */,
+				A74C65E41F9F59410099DE64 /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -767,7 +767,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = A74C65C91F9F56B20099DE64 /* Products */;
+					ProductGroup = A74C65F91F9F59420099DE64 /* Products */;
 					ProjectRef = E1408AF31AA7443FB622B330 /* AirMaps.xcodeproj */;
 				},
 				{
@@ -819,7 +819,7 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = A74C65C71F9F56B20099DE64 /* Products */;
+					ProductGroup = A74C65FB1F9F59420099DE64 /* Products */;
 					ProjectRef = FEAE6A47BD0344A0831F1386 /* RNVectorIcons.xcodeproj */;
 				},
 			);
@@ -1009,39 +1009,39 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A74C65B21F9F56B20099DE64 /* libRCTBlob-tvOS.a */ = {
+		A74C65E41F9F59410099DE64 /* libRCTBlob-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libRCTBlob-tvOS.a";
-			remoteRef = A74C65B11F9F56B20099DE64 /* PBXContainerItemProxy */;
+			remoteRef = A74C65E31F9F59410099DE64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A74C65C41F9F56B20099DE64 /* libfishhook.a */ = {
+		A74C65F61F9F59410099DE64 /* libfishhook.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libfishhook.a;
-			remoteRef = A74C65C31F9F56B20099DE64 /* PBXContainerItemProxy */;
+			remoteRef = A74C65F51F9F59410099DE64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A74C65C61F9F56B20099DE64 /* libfishhook-tvOS.a */ = {
+		A74C65F81F9F59410099DE64 /* libfishhook-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libfishhook-tvOS.a";
-			remoteRef = A74C65C51F9F56B20099DE64 /* PBXContainerItemProxy */;
+			remoteRef = A74C65F71F9F59410099DE64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A74C65CD1F9F56B30099DE64 /* libAirMaps.a */ = {
+		A74C65FF1F9F59420099DE64 /* libAirMaps.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAirMaps.a;
-			remoteRef = A74C65CC1F9F56B30099DE64 /* PBXContainerItemProxy */;
+			remoteRef = A74C65FE1F9F59420099DE64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		A74C65D01F9F56B30099DE64 /* libRNVectorIcons.a */ = {
+		A74C66021F9F59420099DE64 /* libRNVectorIcons.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNVectorIcons.a;
-			remoteRef = A74C65CF1F9F56B30099DE64 /* PBXContainerItemProxy */;
+			remoteRef = A74C66011F9F59420099DE64 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
