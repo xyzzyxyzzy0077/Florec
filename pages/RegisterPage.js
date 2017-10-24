@@ -21,6 +21,7 @@ import {
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
+import DatePicker from 'react-native-datepicker'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
@@ -39,6 +40,7 @@ export default class Register extends Component {
       email: '',
       password: '',
       gender: '',
+      dob: this.props.date
     };
   }
 
@@ -87,18 +89,44 @@ export default class Register extends Component {
         <Grid style={{alignItems: 'center'}}>
          <Row>
           <Form style={{flex: 1}}>
-          <Item>
-          <Icon active name='contacts' />
-          <Label>Gender</Label>
-            <Picker
-              mode="dropdown"
-              placeholder="Please select"
-              selectedValue={this.state.gender}
-              onValueChange={this.onValueChange.bind(this)}>
-              <Item label="Male" value="key0" />
-              <Item label="Female" value="key1" />
-            </Picker>
-          </Item>
+
+            <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
+              <Icon active name='contacts' />
+              <Label style={{flex: 1}}>Gender</Label>
+                <Picker
+                  style={{flex: 1}}
+                  mode="dropdown"
+                  placeholder="Please select"
+                  selectedValue={this.state.gender}
+                  onValueChange={this.onValueChange.bind(this)}>
+                  <Item label="Male" value="key0" />
+                  <Item label="Female" value="key1" />
+                </Picker>
+            </Item>
+
+            <Item style={{height: 55, flexDirection: 'row'}}>
+              <Icon active name='calendar' />
+              <Label style={{flex: 1}}>Birthday</Label>
+              <DatePicker
+                style={{flex: 1, justifyContent: 'flex-start'}}
+                customStyles={{
+                  dateInput:{borderWidth: 0},
+                  dateText:{fontSize: 16},
+                  placeholderText:{fontSize:16, color:'rgb(170,170,170)'}
+                }}
+                date={this.state.dob}
+                mode="date"
+                placeholder="Please select"
+                format="DD-MM-YYYY"
+                minDate="01-01-1900"
+                maxDate="31-12-2016"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                showIcon={false}
+                onDateChange={(date) => {this.setState({dob: date})}}/>
+            </Item>
+
+
             <Item>
               <Icon active name='ios-flower' />
               <Input
