@@ -75,11 +75,12 @@ export default class Login extends Component {
   render(){
     const {navigate} = this.props.navigation
     return (
-      <Container>
+      <Container style={styles.container}>
        <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
        <Grid style={{alignItems: 'center'}}>
         <Row>
-          <Text>TODO: Add icon</Text>
+          <Image
+          source={require('../src/flower.png')}/>
         </Row>
         <Row>
           <Form style={{flex: 1, alignItems: 'center'}}>
@@ -103,12 +104,13 @@ export default class Login extends Component {
         </Grid>
 
           <Button block
+            style={styles.loginButton}
             onPress={this.login.bind(this)}>
             <Text>Login</Text>
           </Button>
 
           <Button block light
-            style={{marginTop: 10}}
+            style={styles.registerButton}
             onPress={() => navigate('Register')}>
             <Text>Register</Text>
           </Button>
@@ -119,5 +121,17 @@ export default class Login extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8fff2'
+  },
+  loginButton: {
+    backgroundColor: '#ff9baf'
+  },
+  registerButton: {
+    marginTop: 10,
+  }
+})
 
 AppRegistry.registerComponent('Login', () => Login);
