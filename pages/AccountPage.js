@@ -13,10 +13,6 @@ import login from './LoginPage.js';
 
 import firebaseApp from '../components/Firebase.js';
 
-import styles from '../src/common-styles.js';
-
-
-
 export default class Account extends Component {
 
   constructor(props){

@@ -3,7 +3,9 @@ import React, {Component} from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Image,
+  Dimensions
 } from 'react-native';
 
 import {
@@ -80,7 +82,8 @@ export default class Login extends Component {
        <Grid style={{alignItems: 'center'}}>
         <Row>
           <Image
-          source={require('../src/flower.png')}/>
+            source={require('../src/flower.png')}
+            style={styles.image}/>
         </Row>
         <Row>
           <Form style={{flex: 1, alignItems: 'center'}}>
@@ -124,13 +127,18 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f8fff2'
+
   },
   loginButton: {
-    backgroundColor: '#ff9baf'
+    backgroundColor: '#ff5064'
   },
   registerButton: {
     marginTop: 10,
+  },
+  image: {
+    marginTop: Dimensions.get("window").height * 0.1,
+    height: Dimensions.get("window").width * 0.4,
+    width: Dimensions.get("window").width * 0.4
   }
 })
 
