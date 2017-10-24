@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  TextInput,
-  View
+  StyleSheet,
+  AsyncStorage
 } from 'react-native';
 
 import {
@@ -16,8 +16,11 @@ import {
   Input,
   Label,
   Button,
-  Text
+  Text,
+  Picker
 } from 'native-base';
+
+import { Col, Row, Grid } from "react-native-easy-grid";
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
@@ -25,7 +28,7 @@ import firebaseApp from '../components/Firebase.js'
 export default class Register extends Component {
 
   static navigationOptions = {
-    title: 'Register!'
+    title: 'Register'
   }
 
   constructor(props){
@@ -34,7 +37,8 @@ export default class Register extends Component {
     this.state = {
       loaded: true,
       email: '',
-      password: ''
+      password: '',
+      gender: '',
     };
   }
 
@@ -68,11 +72,10 @@ export default class Register extends Component {
 
     };
 
-
-  goToLogin(){
-    this.props.navigator.push({
-      component: Login
-    });
+  onValueChange(value: string) {
+    this.setState({
+      gender: value
+    })
   }
 
   render() {
@@ -80,28 +83,45 @@ export default class Register extends Component {
     return (
 
       <Container>
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Email Address</Label>
+        <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
+        <Grid style={{alignItems: 'center'}}>
+         <Row>
+          <Form style={{flex: 1}}>
+          <Item>
+          <Icon active name='contacts' />
+          <Label>Gender</Label>
+            <Picker
+              mode="dropdown"
+              placeholder="Please select"
+              selectedValue={this.state.gender}
+              onValueChange={this.onValueChange.bind(this)}>
+              <Item label="Male" value="key0" />
+              <Item label="Female" value="key1" />
+            </Picker>
+          </Item>
+            <Item>
               <Icon active name='ios-flower' />
               <Input
-              value = {this.state.email}
-              onChangeText={(text) => this.setState({email: text})}/>
+                placeholder='Email'
+                value = {this.state.email}
+                onChangeText={(text) => this.setState({email: text})}/>
             </Item>
-            <Item floatingLabel>
+            <Item>
               <Icon active name='ios-lock' />
-              <Label>Password</Label>
               <Input
+              placeholder='Password'
               value={this.state.password}
               onChangeText={(text) => this.setState({password: text})}
               secureTextEntry = {true} />
             </Item>
           </Form>
+          </Row>
+          </Grid>
 
-          <Button full style={{marginTop: 30}}
+          <Button block
+            style={{marginTop: 30}}
             onPress={this.signup.bind(this)}>
-            <Text>Register</Text>
+            <Text>OK</Text>
           </Button>
         </Content>
       </Container>

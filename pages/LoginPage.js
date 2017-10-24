@@ -102,12 +102,13 @@ export default class Login extends Component {
         </Row>
         </Grid>
 
-          <Button full
+          <Button block
             onPress={this.login.bind(this)}>
             <Text>Login</Text>
           </Button>
 
-          <Button full light style={{marginTop: 10, marginBottom: 30}}
+          <Button block light
+            style={{marginTop: 10}}
             onPress={() => navigate('Register')}>
             <Text>Register</Text>
           </Button>
