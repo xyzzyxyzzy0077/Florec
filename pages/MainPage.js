@@ -40,8 +40,7 @@ export default ( Main = TabNavigator(
                  <Button
                   active={props.navigationState.index === 0}
                   onPress={() => props.navigation.navigate("Map")}>
-                   <Icon active name="compass"
-                     style={styles.compassIcon}/>
+                   <Icon active name="compass"/>
                  </Button>
                  <Button
                   active={props.navigationState.index === 1}
@@ -66,7 +65,4 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height * 0.06,
     backgroundColor: '#f2ffe7'
   },
-  compassIcon: {
-
-  }
 })
