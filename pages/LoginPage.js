@@ -3,7 +3,9 @@ import React, {Component} from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Image,
+  Dimensions
 } from 'react-native';
 
 import {
@@ -75,17 +77,19 @@ export default class Login extends Component {
   render(){
     const {navigate} = this.props.navigation
     return (
-      <Container>
+      <Container style={styles.container}>
        <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
        <Grid style={{alignItems: 'center'}}>
         <Row>
-          <Text>TODO: Add icon</Text>
+          <Image
+            source={require('../src/flower.png')}
+            style={styles.image}/>
         </Row>
         <Row>
           <Form style={{flex: 1, alignItems: 'center'}}>
           <Item floatingLabel>
             <Label>Email Address</Label>
-              <Icon active name='ios-flower' />
+              <Icon active name='mail' />
               <Input
               value = {this.state.email}
               onChangeText={(text) => this.setState({email: text})}/>
@@ -103,12 +107,13 @@ export default class Login extends Component {
         </Grid>
 
           <Button block
+            style={styles.loginButton}
             onPress={this.login.bind(this)}>
             <Text>Login</Text>
           </Button>
 
           <Button block light
-            style={{marginTop: 10}}
+            style={styles.registerButton}
             onPress={() => navigate('Register')}>
             <Text>Register</Text>
           </Button>
@@ -119,5 +124,22 @@ export default class Login extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+
+  },
+  loginButton: {
+    backgroundColor: '#ff5064'
+  },
+  registerButton: {
+    marginTop: 10,
+  },
+  image: {
+    marginTop: Dimensions.get("window").height * 0.1,
+    height: Dimensions.get("window").width * 0.4,
+    width: Dimensions.get("window").width * 0.4
+  }
+})
 
 AppRegistry.registerComponent('Login', () => Login);

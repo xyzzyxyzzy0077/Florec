@@ -29,7 +29,9 @@ import firebaseApp from '../components/Firebase.js'
 export default class Register extends Component {
 
   static navigationOptions = {
-    title: 'Register'
+    title: 'Register',
+    headerBackTitleStyle: {color: 'black',},
+    headerTintColor: 'black',
   }
 
   constructor(props){
@@ -128,7 +130,7 @@ export default class Register extends Component {
 
 
             <Item>
-              <Icon active name='ios-flower' />
+              <Icon active name='mail' />
               <Input
                 placeholder='Email'
                 value = {this.state.email}
@@ -137,17 +139,17 @@ export default class Register extends Component {
             <Item>
               <Icon active name='ios-lock' />
               <Input
-              placeholder='Password'
-              value={this.state.password}
-              onChangeText={(text) => this.setState({password: text})}
-              secureTextEntry = {true} />
+                placeholder='Password'
+                value={this.state.password}
+                onChangeText={(text) => this.setState({password: text})}
+                secureTextEntry = {true} />
             </Item>
           </Form>
           </Row>
           </Grid>
 
           <Button block
-            style={{marginTop: 30}}
+            style={styles.OKbutton}
             onPress={this.signup.bind(this)}>
             <Text>OK</Text>
           </Button>
@@ -156,5 +158,11 @@ export default class Register extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  OKbutton: {
+    backgroundColor: '#7acc31'
+  }
+})
 
 AppRegistry.registerComponent('Register', () => Register);
