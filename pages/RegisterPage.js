@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  TextInput,
-  View
+  StyleSheet,
+  AsyncStorage
 } from 'react-native';
 
 import {
@@ -16,8 +16,12 @@ import {
   Input,
   Label,
   Button,
-  Text
+  Text,
+  Picker
 } from 'native-base';
+
+import { Col, Row, Grid } from "react-native-easy-grid";
+import DatePicker from 'react-native-datepicker'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
@@ -25,7 +29,9 @@ import firebaseApp from '../components/Firebase.js'
 export default class Register extends Component {
 
   static navigationOptions = {
-    title: 'Register!'
+    title: 'Register',
+    headerBackTitleStyle: {color: 'black',},
+    headerTintColor: 'black',
   }
 
   constructor(props){
@@ -34,7 +40,9 @@ export default class Register extends Component {
     this.state = {
       loaded: true,
       email: '',
-      password: ''
+      password: '',
+      gender: '',
+      dob: this.props.date
     };
   }
 
@@ -68,11 +76,10 @@ export default class Register extends Component {
 
     };
 
-
-  goToLogin(){
-    this.props.navigator.push({
-      component: Login
-    });
+  onValueChange(value: string) {
+    this.setState({
+      gender: value
+    })
   }
 
   render() {
@@ -80,33 +87,82 @@ export default class Register extends Component {
     return (
 
       <Container>
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Email Address</Label>
-              <Icon active name='ios-flower' />
-              <Input
-              value = {this.state.email}
-              onChangeText={(text) => this.setState({email: text})}/>
+        <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
+        <Grid style={{alignItems: 'center'}}>
+         <Row>
+          <Form style={{flex: 1}}>
+
+            <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
+              <Icon active name='contacts' />
+              <Label style={{flex: 1}}>Gender</Label>
+                <Picker
+                  style={{flex: 1}}
+                  mode="dropdown"
+                  placeholder="Please select"
+                  selectedValue={this.state.gender}
+                  onValueChange={this.onValueChange.bind(this)}>
+                  <Item label="Male" value="key0" />
+                  <Item label="Female" value="key1" />
+                </Picker>
             </Item>
-            <Item floatingLabel>
-              <Icon active name='ios-lock' />
-              <Label>Password</Label>
+
+            <Item style={{height: 55, flexDirection: 'row'}}>
+              <Icon active name='calendar' />
+              <Label style={{flex: 1}}>Birthday</Label>
+              <DatePicker
+                style={{flex: 1, justifyContent: 'flex-start'}}
+                customStyles={{
+                  dateInput:{borderWidth: 0},
+                  dateText:{fontSize: 16},
+                  placeholderText:{fontSize:16, color:'rgb(170,170,170)'}
+                }}
+                date={this.state.dob}
+                mode="date"
+                placeholder="Please select"
+                format="DD-MM-YYYY"
+                minDate="01-01-1900"
+                maxDate="31-12-2016"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                showIcon={false}
+                onDateChange={(date) => {this.setState({dob: date})}}/>
+            </Item>
+
+
+            <Item>
+              <Icon active name='mail' />
               <Input
-              value={this.state.password}
-              onChangeText={(text) => this.setState({password: text})}
-              secureTextEntry = {true} />
+                placeholder='Email'
+                value = {this.state.email}
+                onChangeText={(text) => this.setState({email: text})}/>
+            </Item>
+            <Item>
+              <Icon active name='ios-lock' />
+              <Input
+                placeholder='Password'
+                value={this.state.password}
+                onChangeText={(text) => this.setState({password: text})}
+                secureTextEntry = {true} />
             </Item>
           </Form>
+          </Row>
+          </Grid>
 
-          <Button full style={{marginTop: 30}}
+          <Button block
+            style={styles.OKbutton}
             onPress={this.signup.bind(this)}>
-            <Text>Register</Text>
+            <Text>OK</Text>
           </Button>
         </Content>
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  OKbutton: {
+    backgroundColor: '#7acc31'
+  }
+})
 
 AppRegistry.registerComponent('Register', () => Register);
