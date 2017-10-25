@@ -17,7 +17,8 @@ import {
   Label,
   Button,
   Text,
-  Picker
+  Picker,
+  ActionSheet
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -25,6 +26,9 @@ import DatePicker from 'react-native-datepicker'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
+
+var BUTTONS = ['Male', 'Female', 'Cancel']
+var CANCEL_INDEX = 2
 
 export default class Register extends Component {
 
@@ -38,49 +42,60 @@ export default class Register extends Component {
     super(props);
 
     this.state = {
-      loaded: true,
-      email: '',
-      password: '',
-      gender: '',
-      dob: this.props.date
-    };
+      user: {
+        email: '',
+        password: '',
+        gender: 'Please select',
+        dob: this.props.date
+      },
+      app: {
+        err: '',
+        loaded: true,
+      }
   }
+}
 
   signup(){
 
     this.setState({
-      loaded: false
-    });
+      app: {
+        ...this.state.app,
+        loaded: false
+    }})
 
-    firebaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+    firebaseApp.auth().createUserWithEmailAndPassword(this.state.user.email, this.state.user.password)
     .then(() => {
       this.setState({
-        error: '',
-        loading: false
-      });
+        app: {
+          ...this.state.app,
+          error: '',
+          loading: false
+      }});
       alert('Account created!');
     })
     .catch((error) => {
       alert(error.message)
       this.setState({
-        error: 'Create user failed.',
-        loading: false
-      });
+        app: {
+          ...this.state.app,
+          error: 'Create user failed.',
+          loading: false
+      }});
     });
 
       this.setState({
-        email: '',
-        password: '',
-        loaded: true
-      });
+        user: {
+          ...this.state.user,
+          password: '',
+        },
+        app: {
+          ...this.state.app,
+          loaded: true,
+        }
+    });
 
-    };
+  };
 
-  onValueChange(value: string) {
-    this.setState({
-      gender: value
-    })
-  }
 
   render() {
     const {navigate} = this.props.navigation
@@ -95,15 +110,25 @@ export default class Register extends Component {
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
               <Icon active name='contacts' />
               <Label style={{flex: 1}}>Gender</Label>
-                <Picker
-                  style={{flex: 1}}
-                  mode="dropdown"
-                  placeholder="Please select"
-                  selectedValue={this.state.gender}
-                  onValueChange={this.onValueChange.bind(this)}>
-                  <Item label="Male" value="key0" />
-                  <Item label="Female" value="key1" />
-                </Picker>
+              <Label style={{color: '#aaaaaa', fontSize: 16, marginRight: 10}}
+                onPress={() =>
+                ActionSheet.show(
+                  {
+                    options: BUTTONS,
+                    cancelButtonIndex: CANCEL_INDEX,
+                  },
+                  buttonIndex => {
+                    if(buttonIndex!=2){
+                      this.setState({
+                      user: {
+                        ...this.state.user,
+                        gender: BUTTONS[buttonIndex]
+                      }})
+                    }
+                  }
+                )}>
+                {this.state.user.gender}
+              </Label>
             </Item>
 
             <Item style={{height: 55, flexDirection: 'row'}}>
@@ -114,9 +139,9 @@ export default class Register extends Component {
                 customStyles={{
                   dateInput:{borderWidth: 0},
                   dateText:{fontSize: 16},
-                  placeholderText:{fontSize:16, color:'rgb(170,170,170)'}
+                  placeholderText:{fontSize:16, color:'#aaaaaa'}
                 }}
-                date={this.state.dob}
+                date={this.state.user.dob}
                 mode="date"
                 placeholder="Please select"
                 format="DD-MM-YYYY"
@@ -125,7 +150,16 @@ export default class Register extends Component {
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 showIcon={false}
-                onDateChange={(date) => {this.setState({dob: date})}}/>
+                onDateChange={
+                  (date) => {
+                    this.setState({
+                      user: {
+                        ...this.state.user,
+                        dob: date
+                      }
+                    })
+                  }
+                }/>
             </Item>
 
 
@@ -133,15 +167,29 @@ export default class Register extends Component {
               <Icon active name='mail' />
               <Input
                 placeholder='Email'
-                value = {this.state.email}
-                onChangeText={(text) => this.setState({email: text})}/>
+                value = {this.state.user.email}
+                onChangeText={
+                  (text) => this.setState({
+                    user: {
+                      ...this.state.user,
+                      email: text
+                    }
+                  })
+                }/>
             </Item>
             <Item>
               <Icon active name='ios-lock' />
               <Input
                 placeholder='Password'
-                value={this.state.password}
-                onChangeText={(text) => this.setState({password: text})}
+                value={this.state.user.password}
+                onChangeText={
+                  (text) => this.setState({
+                    user: {
+                      ...this.state.user,
+                      password: text
+                    }
+                  })
+                }
                 secureTextEntry = {true} />
             </Item>
           </Form>
