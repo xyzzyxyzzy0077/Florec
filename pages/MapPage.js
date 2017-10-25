@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  View
+  View,
+  Dimensions
 } from 'react-native';
 import {
   Container,
@@ -14,9 +15,12 @@ import {
   Button,
   Footer,
   FooterTab,
-  Text} from 'native-base';
+  Text,
+  StyleProvider
+} from 'native-base';
 import MapView from 'react-native-maps'
-
+import getTheme from '../native-base-theme/components';
+import platform from '../native-base-theme/variables/platform';
 
 export default class Map extends Component {
 
@@ -74,16 +78,15 @@ export default class Map extends Component {
           region={this.state.region}
           showsUserLocation = {true}
           showsMyLocationButton = {true}
-          followsUserLocation = {true}
+          followsUserLocation = {true}>
 
-        >
           <MapView.Marker
             coordinate={{
               latitude: 31.2295,
               longitude: 121.4728,
             }}
-            draggable
-          />
+            draggable/>
+
         </MapView>
 
         <Button rounded
@@ -92,16 +95,19 @@ export default class Map extends Component {
           <Icon name="locate"/>
         </Button>
 
-        <Footer>
-          <FooterTab>
-            <Button active>
-              <Icon active name="compass" />
-            </Button>
-            <Button>
-              <Icon name="person" />
-            </Button>
-          </FooterTab>
-        </Footer>
+        <StyleProvider style={getTheme(platform)}>
+          <Footer style={styles.footer}>
+            <FooterTab>
+              <Button active>
+                <Icon outline active name="compass"
+                  style={styles.compassIcon}/>
+              </Button>
+              <Button>
+                <Icon name="person" />
+              </Button>
+            </FooterTab>
+          </Footer>
+        </StyleProvider>
 
       </Container>
     );
@@ -118,11 +124,17 @@ const styles = StyleSheet.create({
   },
   locateButton: {
     position: 'absolute',
-    bottom: 80,
-    right: 20,
+    bottom: Dimensions.get("window").height * 0.11,
+    right: Dimensions.get("window").height * 0.05,
     height: 53,
     borderRadius: 100,
     backgroundColor: 'rgba(0,0,0,0.5)'
+  },
+  footer: {
+    height: Dimensions.get("window").height * 0.06,
+    backgroundColor: '#f2ffe7'
+  },
+  compassIcon: {
 
   }
 })
