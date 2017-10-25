@@ -26,8 +26,9 @@ import platform from '../native-base-theme/variables/platform';
 
 export default ( Main = TabNavigator(
   {
+    Account: {screen: Account},
     Map: {screen: Map},
-    Account: {screen: Account}
+
   },
   {
     tabBarPosition: "bottom",
