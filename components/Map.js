@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   locateButton: {
     position: 'absolute',
     bottom: Dimensions.get("window").height * 0.05,
-    right: Dimensions.get("window").height * 0.05,
+    right: Dimensions.get("window").width * 0.08,
     height: 53,
     borderRadius: 100,
     backgroundColor: 'rgba(0,0,0,0.5)'
