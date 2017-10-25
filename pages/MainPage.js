@@ -3,16 +3,10 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  View,
   Dimensions
 } from 'react-native';
 
 import {
-  Container,
-  Body,
-  Title,
-  Header,
-  Content,
   Icon,
   Button,
   Footer,
