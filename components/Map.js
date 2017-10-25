@@ -18,6 +18,10 @@ import MapView from 'react-native-maps'
 
 export default class Map extends Component {
 
+  static navigationOptions = {
+    header: null
+  }
+
   constructor(props) {
     super(props);
 

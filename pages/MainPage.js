@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+
 import {
   AppRegistry,
   StyleSheet,
   View,
   Dimensions
 } from 'react-native';
+
 import {
   Container,
   Body,
@@ -19,45 +21,47 @@ import {
   StyleProvider
 } from 'native-base';
 
+import { TabNavigator } from "react-navigation";
+
 import Map from '../components/Map.js'
+import Account from './AccountPage.js'
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 
-export default class Main extends Component {
 
-  static navigationOptions = {
-    header: null
+
+export default ( Main = TabNavigator(
+  {
+    Map: {screen: Map},
+    Account: {screen: Account}
+  },
+  {
+    tabBarPosition: "bottom",
+    tabBarComponent: props => {
+       return (
+
+           <StyleProvider style={getTheme(platform)}>
+             <Footer style={styles.footer}>
+               <FooterTab>
+                 <Button
+                  active={props.navigationState.index === 0}
+                  onPress={() => props.navigation.navigate("Map")}>
+                   <Icon active name="compass"
+                     style={styles.compassIcon}/>
+                 </Button>
+                 <Button
+                  active={props.navigationState.index === 1}
+                  onPress={() => props.navigation.navigate("Account")}>
+                   <Icon name="person" />
+                 </Button>
+               </FooterTab>
+             </Footer>
+           </StyleProvider>
+
+       )
+   }
   }
-
-  constructor(props) {
-    super(props);
-  }
-
-
-  render() {
-    return (
-      <Container style={styles.container}>
-
-        <Map/>
-
-        <StyleProvider style={getTheme(platform)}>
-          <Footer style={styles.footer}>
-            <FooterTab>
-              <Button active>
-                <Icon outline active name="compass"
-                  style={styles.compassIcon}/>
-              </Button>
-              <Button>
-                <Icon name="person" />
-              </Button>
-            </FooterTab>
-          </Footer>
-        </StyleProvider>
-
-      </Container>
-    );
-  }
-}
+))
 
 const styles = StyleSheet.create({
   container: {
