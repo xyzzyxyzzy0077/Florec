@@ -130,7 +130,7 @@ export default class Register extends Component {
 
 
             <Item>
-              <Icon active name='ios-flower' />
+              <Icon active name='mail' />
               <Input
                 placeholder='Email'
                 value = {this.state.email}
@@ -139,10 +139,10 @@ export default class Register extends Component {
             <Item>
               <Icon active name='ios-lock' />
               <Input
-              placeholder='Password'
-              value={this.state.password}
-              onChangeText={(text) => this.setState({password: text})}
-              secureTextEntry = {true} />
+                placeholder='Password'
+                value={this.state.password}
+                onChangeText={(text) => this.setState({password: text})}
+                secureTextEntry = {true} />
             </Item>
           </Form>
           </Row>

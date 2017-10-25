@@ -69,11 +69,6 @@ export default class Map extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Header>
-          <Body>
-            <Title>Florec</Title>
-          </Body>
-        </Header>
         <MapView
           style={styles.map}
           region={this.state.region}

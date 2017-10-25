@@ -89,7 +89,7 @@ export default class Login extends Component {
           <Form style={{flex: 1, alignItems: 'center'}}>
           <Item floatingLabel>
             <Label>Email Address</Label>
-              <Icon active name='ios-flower' />
+              <Icon active name='mail' />
               <Input
               value = {this.state.email}
               onChangeText={(text) => this.setState({email: text})}/>
