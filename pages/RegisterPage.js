@@ -58,7 +58,7 @@ export default class Register extends Component {
         gender: 'Please select',
         dob: this.props.date,
         nickname: '',
-        avatarUri: '../src/defaultAvatar.png'
+        base64Avatar: ''
       },
       app: {
         err: '',
@@ -108,9 +108,41 @@ export default class Register extends Component {
 
   };
 
+  getImage = (data) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        base64Avatar: data
+      }
+    })
+    console.log(this.state.user.base64Avatar)
+
+    //Test sending Image
+    let uploadBlob = ''
+    const sessionId = new Date().getTime()
+    const imageRef = storage.ref('avatar').child(`${sessionId}`)
+
+    Blob.build(data, { type: 'application/octet-stream;BASE64' })
+    .then((blob) => {
+        uploadBlob = blob
+        return imageRef.put(blob, { contentType: 'application/octet-stream' })
+      })
+      .then(() => {
+        uploadBlob.close()
+        return imageRef.getDownloadURL()
+      })
+      .then((url) => {
+        resolve(url)
+      })
+      .catch((error) => {
+        reject(error)
+    })
+
+  }
 
   render() {
     const {navigate} = this.props.navigation
+
     return (
 
       <Container>
@@ -120,7 +152,7 @@ export default class Register extends Component {
           <Form style={{flex: 1}}>
 
             <Item style={{padding: 10}}>
-              <AvatarUpload/>
+              <AvatarUpload getImage = {this.getImage}/>
             </Item>
 
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>

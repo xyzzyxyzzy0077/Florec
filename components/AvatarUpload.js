@@ -21,12 +21,16 @@ export default class ImageUpload extends Component {
 
   componentDidMount() {}
 
+  passImage = (avatar) => {
+    this.props.getImage(avatar)
+  }
+
   render() {
     return (
       <PhotoUpload
         onPhotoSelect={avatar => {
          if (avatar) {
-           console.log('Image base64 string: ', avatar)
+           this.passImage(avatar)
          }
        }}>
 
