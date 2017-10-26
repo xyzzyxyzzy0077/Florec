@@ -26,6 +26,7 @@ import DatePicker from 'react-native-datepicker'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
+import ImageUpload from '../components/PhotoUpload.js'
 
 var BUTTONS = ['Male', 'Female', 'Cancel']
 var CANCEL_INDEX = 2
@@ -108,7 +109,7 @@ export default class Register extends Component {
           <Form style={{flex: 1}}>
 
             <Item>
-              
+              <ImageUpload />
             </Item>
 
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>

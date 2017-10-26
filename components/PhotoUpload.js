@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from 'react-native';
 
 import {
@@ -23,8 +24,10 @@ import {
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
+import PhotoUpload from 'react-native-photo-upload'
 
-export default class Map extends Component {
+
+export default class ImageUpload extends Component {
 
   constructor(props) {
     super(props)
@@ -36,9 +39,26 @@ export default class Map extends Component {
 
   render() {
     return (
-      <Container>
-
-      </Container>
+      <PhotoUpload
+   onPhotoSelect={avatar => {
+     if (avatar) {
+       console.log('Image base64 string: ', avatar)
+     }
+   }}
+ >
+   <Image
+     style={{
+       paddingVertical: 30,
+       width: 150,
+       height: 150,
+       borderRadius: 75
+     }}
+     resizeMode='cover'
+     source={{
+       uri: 'https://www.sparklabs.com/forum/styles/comboot/theme/images/default_avatar.jpg'
+     }}
+   />
+ </PhotoUpload>
     )
   }
 }
