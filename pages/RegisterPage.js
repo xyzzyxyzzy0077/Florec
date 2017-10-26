@@ -26,6 +26,7 @@ import DatePicker from 'react-native-datepicker'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
+import AvatarUpload from '../components/AvatarUpload.js'
 
 var BUTTONS = ['Male', 'Female', 'Cancel']
 var CANCEL_INDEX = 2
@@ -46,7 +47,8 @@ export default class Register extends Component {
         email: '',
         password: '',
         gender: 'Please select',
-        dob: this.props.date
+        dob: this.props.date,
+        nickname: ''
       },
       app: {
         err: '',
@@ -107,8 +109,8 @@ export default class Register extends Component {
          <Row>
           <Form style={{flex: 1}}>
 
-            <Item>
-              
+            <Item style={{padding: 10}}>
+              <AvatarUpload />
             </Item>
 
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
@@ -181,6 +183,22 @@ export default class Register extends Component {
                   })
                 }/>
             </Item>
+
+            <Item>
+              <Icon active name='happy' />
+              <Input
+                placeholder='Nickname'
+                value = {this.state.user.nickname}
+                onChangeText={
+                  (text) => this.setState({
+                    user: {
+                      ...this.state.user,
+                      nickname: text
+                    }
+                  })
+                }/>
+            </Item>
+
             <Item>
               <Icon active name='ios-lock' />
               <Input
