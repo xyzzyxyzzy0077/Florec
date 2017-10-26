@@ -107,6 +107,10 @@ export default class Register extends Component {
          <Row>
           <Form style={{flex: 1}}>
 
+            <Item>
+              
+            </Item>
+
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
               <Icon active name='contacts' />
               <Label style={{flex: 1}}>Gender</Label>
