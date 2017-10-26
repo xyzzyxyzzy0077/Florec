@@ -115,17 +115,15 @@ export default class Register extends Component {
         base64Avatar: data
       }
     })
-    console.log(this.state.user.base64Avatar)
-
     //Test sending Image
     let uploadBlob = ''
     const sessionId = new Date().getTime()
     const imageRef = storage.ref('avatar').child(`${sessionId}`)
 
-    Blob.build(data, { type: 'application/octet-stream;BASE64' })
+    Blob.build(data, { type: 'image/jpeg;BASE64' })
     .then((blob) => {
         uploadBlob = blob
-        return imageRef.put(blob, { contentType: 'application/octet-stream' })
+        return imageRef.put(blob, { contentType: 'image/jpeg' })
       })
       .then(() => {
         uploadBlob.close()
@@ -137,7 +135,6 @@ export default class Register extends Component {
       .catch((error) => {
         reject(error)
     })
-
   }
 
   render() {
