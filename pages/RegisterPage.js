@@ -23,13 +23,22 @@ import {
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker'
+import RNFetchBlob from 'react-native-fetch-blob'
 
 import Login from './LoginPage.js';
 import firebaseApp from '../components/Firebase.js'
 import AvatarUpload from '../components/AvatarUpload.js'
 
+// For ActionSheet
 var BUTTONS = ['Male', 'Female', 'Cancel']
 var CANCEL_INDEX = 2
+
+// For react-native-fetch-blob
+const storage = firebaseApp.storage()
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
 
 export default class Register extends Component {
 
@@ -48,7 +57,8 @@ export default class Register extends Component {
         password: '',
         gender: 'Please select',
         dob: this.props.date,
-        nickname: ''
+        nickname: '',
+        avatarUri: '../src/defaultAvatar.png'
       },
       app: {
         err: '',
@@ -110,7 +120,7 @@ export default class Register extends Component {
           <Form style={{flex: 1}}>
 
             <Item style={{padding: 10}}>
-              <AvatarUpload />
+              <AvatarUpload/>
             </Item>
 
             <Item style={{height: 55, flexDirection: 'row', paddingRight: 14}}>
