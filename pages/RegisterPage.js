@@ -200,7 +200,7 @@ export default class Register extends Component {
             </Item>
 
             <Item>
-              <Icon active name='ios-lock' />
+              <Icon active name='lock' />
               <Input
                 placeholder='Password'
                 value={this.state.user.password}
