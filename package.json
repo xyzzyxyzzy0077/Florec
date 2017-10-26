@@ -16,6 +16,7 @@
 		"react-native-easy-grid": "^0.1.15",
 		"react-native-icon": "^0.2.10",
 		"react-native-maps": "*",
+		"react-native-photo-upload": "^1.1.1",
 		"react-native-vector-icons": "^4.4.2",
 		"react-navigation": "^1.0.0-beta.13"
 	},
