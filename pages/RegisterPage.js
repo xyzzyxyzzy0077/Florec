@@ -40,6 +40,9 @@ const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
+// For user's database
+const userDatabse = firebaseApp.database().ref('users/'+'123test')
+
 export default class Register extends Component {
 
   static navigationOptions = {
@@ -68,6 +71,14 @@ export default class Register extends Component {
 }
 
   signup(){
+
+
+    userDatabse.set({
+      username: 'blah',
+      email: 'blah@blah.com'
+    })
+
+
 
     this.setState({
       app: {
