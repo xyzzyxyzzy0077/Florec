@@ -1,10 +1,10 @@
-'use strict';
-import React, { Component } from 'react';
+'use strict'
+import React, { Component } from 'react'
 import {
   AppRegistry,
   StyleSheet,
   AsyncStorage
-} from 'react-native';
+} from 'react-native'
 
 import {
   Container,
@@ -19,14 +19,15 @@ import {
   Text,
   Picker,
   ActionSheet,
-  Toast
-} from 'native-base';
+  Toast,
+  Spinner
+} from 'native-base'
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from "react-native-easy-grid"
 import DatePicker from 'react-native-datepicker'
 import RNFetchBlob from 'react-native-fetch-blob'
 
-import Login from './LoginPage.js';
+import Login from './LoginPage.js'
 import firebaseApp from '../components/Firebase.js'
 import AvatarUpload from '../components/AvatarUpload.js'
 
@@ -50,16 +51,16 @@ export default class Register extends Component {
   }
 
   constructor(props){
-    super(props);
+    super(props)
     this.state = {
       user: {
-        uid: '',
+        uid: 'empty',
         email: '',
         password: '',
         gender: 'Please select',
-        dob: this.props.date,
+        dob: '',
         nickname: '',
-        avatarSource: ''
+        avatarSource: 'empty'
       },
       app: {
         err: '',
@@ -69,79 +70,92 @@ export default class Register extends Component {
     }
   }
 
-  signup(){
-
+  isLoading(bool) {
     this.setState({
       app: {
         ...this.state.app,
-        loading: true
-    }})
-
-    firebaseApp.auth().createUserWithEmailAndPassword(this.state.user.email, this.state.user.password)
-    .then(() => {
-      this.setState({
-        user: {
-          ...this.state.user,
-          uid: firebaseApp.auth().currentUser.uid
-        },
-        app: {
-          ...this.state.app,
-          error: '',
-          loading: false
-        }
-      })
-
-      this.sendToFirebase()
-      .then(() => Toast.show({
-                  text: 'Account created successfully',
-                  position: 'bottom',
-                  buttonText: 'OK',
-                  duration: 3000
-                }))
-      .catch(error => Toast.show({
-                  text: error,
-                  position: 'bottom',
-                  buttonText: 'OK',
-                  duration: 7000
-                }))
-
-      // Should jump to MainPage
+        loading: bool
+      }
     })
-    .catch((error) => {
+  }
 
+  signup(){
+
+    this.isLoading(true)
+
+    console.log('4. this.state.app.loading: ' + this.state.app.loading)
+
+    this.checkFields()
+    .then(() => {
+      firebaseApp.auth().createUserWithEmailAndPassword(this.state.user.email, this.state.user.password)
+      .then(() => {
+
+          this.setState({
+            user: {
+              ...this.state.user,
+              uid: firebaseApp.auth().currentUser.uid
+            },
+          })
+
+          this.sendToFirebase()
+          .then(() => Toast.show({
+                      text: 'Account created successfully',
+                      position: 'bottom',
+                      buttonText: 'OK',
+                      duration: 3000
+                    }))
+          .catch(error => Toast.show({
+                      text: error,
+                      position: 'bottom',
+                      buttonText: 'OK',
+                      duration: 7000
+                    }))
+          .done(() => {
+            this.isLoading(false)
+            console.log('1. this.state.app.loading: ' + this.state.app.loading)
+          })
+          // Should jump to MainPage
+      })
+      .catch((error) => {
+
+        Toast.show({
+                    text: error.message,
+                    position: 'bottom',
+                    buttonText: 'OK',
+                    duration: 7000
+                  })
+        this.isLoading(false)
+        console.log('5. this.state.app.loading: ' + this.state.app.loading)
+      })
+    })
+    .catch((field) => {
       Toast.show({
-                  text: error.message,
+                  text: field != 'dob'? `Please fill in your ${field}` : 'Please fill in your birthday',
                   position: 'bottom',
                   buttonText: 'OK',
                   duration: 7000
                 })
+      this.isLoading(false)
+    })
+  }
 
-      this.setState({
-        app: {
-          ...this.state.app,
-          error: 'Create user failed.',
-          loading: true
-      }});
-    });
-
-    // Let the user correct the mistake
-      this.setState({
-        user: {
-          ...this.state.user,
-          password: '',
-        },
-        app: {
-          ...this.state.app,
-          loading: false,
+  checkFields() {
+    return new Promise((resolve,reject) => {
+      for(var key in this.state.user){
+        console.log('Here uid is checked and it is ' + this.state.user.uid)
+        if(this.state.user[key] == '' || this.state.user[key] == 'Please select'){
+          console.log('The key got rejected is ' + key + ' and it is ' + this.state.user[key])
+          reject(key)
+          return
         }
-    });
-
-  };
+      }
+      resolve()
+    })
+  }
 
 
   sendToFirebase() {
     return new Promise((resolve,reject) => {
-
           // Send to storage
           let uploadBlob = ''
           const imageRef = storage.ref('avatar').child(`${this.state.user.uid}`)
@@ -149,9 +163,21 @@ export default class Register extends Component {
           // Database reference
           const userDatabase = firebaseApp.database().ref(`users/${this.state.user.uid}`)
 
+          // Send to database
+            userDatabase.update({
+              uid: this.state.user.uid,
+              email: this.state.user.email,
+              gender: this.state.user.gender,
+              dob: this.state.user.dob,
+              nickname: this.state.user.nickname,
+            })
+
+
           if (this.state.app.base64Avatar != '') { // If the avatar is not selected, no need to upload it, use the default one in the cloud storage
             Blob.build(this.state.app.base64Avatar, { type: 'image/jpeg;BASE64' })
             .then((blob) => {
+              this.isLoading(true)
+              console.log('2. this.state.app.loading: ' + this.state.app.loading)
               uploadBlob = blob
               return imageRef.put(blob, { contentType: 'image/jpeg' })
             })
@@ -168,22 +194,23 @@ export default class Register extends Component {
                   }
                 })
                 userDatabase.update({avatarSource: url})
+                resolve()
               })
               .catch((error) => {
                 reject(error)
               })
+          } else {
+            storage.ref('avatar').child('defaultAvatar.png').getDownloadURL()
+            .then((data) => {
+              this.isLoading(true)
+              console.log('3. this.state.app.loading: ' + this.state.app.loading)
+              userDatabase.update({avatarSource: data})
+              resolve()
+            })
+            .catch(error => {
+              reject(error)
+            })
           }
-
-          // Send to database
-
-          userDatabase.update({
-            uid: this.state.user.uid,
-            email: this.state.user.email,
-            gender: this.state.user.gender,
-            dob: this.state.user.dob,
-            nickname: this.state.user.nickname,
-          })
-          resolve()
     }
   )
 
@@ -272,6 +299,7 @@ export default class Register extends Component {
             <Item>
               <Icon active name='mail' />
               <Input
+                autoCapitalize = 'none'
                 placeholder='Email'
                 value = {this.state.user.email}
                 onChangeText={
@@ -287,6 +315,7 @@ export default class Register extends Component {
             <Item>
               <Icon active name='happy' />
               <Input
+                autoCapitalize = 'none'
                 placeholder='Nickname'
                 value = {this.state.user.nickname}
                 onChangeText={
@@ -302,6 +331,7 @@ export default class Register extends Component {
             <Item>
               <Icon active name='lock' />
               <Input
+                autoCapitalize = 'none'
                 placeholder='Password'
                 value={this.state.user.password}
                 onChangeText={
@@ -320,14 +350,13 @@ export default class Register extends Component {
 
           <Button block
             style={styles.OKbutton}
-            onPress={
-                this.signup.bind(this) // Shoud return a Promise and show a toast
-            }>
-            <Text>OK</Text>
+            onPress={this.signup.bind(this)}>
+            {((!this.state.app.loading) && (<Text>OK</Text>)) ||
+              ((this.state.app.loading) && (<Spinner color='white'/>))}
           </Button>
         </Content>
       </Container>
-    );
+    )
   }
 }
 
@@ -337,4 +366,4 @@ const styles = StyleSheet.create({
   }
 })
 
-AppRegistry.registerComponent('Register', () => Register);
+AppRegistry.registerComponent('Register', () => Register)
