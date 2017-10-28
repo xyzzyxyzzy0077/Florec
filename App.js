@@ -45,7 +45,7 @@ let checkSignedIn = function() {
     Register: {screen: Register},
     Account: {screen: Account}
   },{
-    initialRouteName: !checkSignedIn() ? 'Register' : 'Main'
+    initialRouteName: !checkSignedIn() ? 'Login' : 'Main'
   })
 
   export default () =>

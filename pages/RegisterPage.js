@@ -18,7 +18,8 @@ import {
   Button,
   Text,
   Picker,
-  ActionSheet
+  ActionSheet,
+  Toast
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -40,72 +41,90 @@ const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
-// For user's database
-const userDatabse = firebaseApp.database().ref('users/'+'123test')
-
 export default class Register extends Component {
 
   static navigationOptions = {
     title: 'Register',
-    headerBackTitleStyle: {color: 'black',},
+    headerBackTitleStyle: {color: 'black'},
     headerTintColor: 'black',
   }
 
   constructor(props){
     super(props);
-
     this.state = {
       user: {
+        uid: '',
         email: '',
         password: '',
         gender: 'Please select',
         dob: this.props.date,
         nickname: '',
-        base64Avatar: ''
+        avatarSource: ''
       },
       app: {
         err: '',
-        loaded: true,
+        loading: false,
+        base64Avatar: ''
       }
+    }
   }
-}
 
   signup(){
-
-
-    userDatabse.set({
-      username: 'blah',
-      email: 'blah@blah.com'
-    })
-
-
 
     this.setState({
       app: {
         ...this.state.app,
-        loaded: false
+        loading: true
     }})
 
     firebaseApp.auth().createUserWithEmailAndPassword(this.state.user.email, this.state.user.password)
     .then(() => {
       this.setState({
+        user: {
+          ...this.state.user,
+          uid: firebaseApp.auth().currentUser.uid
+        },
         app: {
           ...this.state.app,
           error: '',
           loading: false
-      }});
-      alert('Account created!');
+        }
+      })
+
+      this.sendToFirebase()
+      .then(() => Toast.show({
+                  text: 'Account created successfully',
+                  position: 'bottom',
+                  buttonText: 'OK',
+                  duration: 3000
+                }))
+      .catch(error => Toast.show({
+                  text: error,
+                  position: 'bottom',
+                  buttonText: 'OK',
+                  duration: 7000
+                }))
+
+      // Should jump to MainPage
     })
     .catch((error) => {
-      alert(error.message)
+
+      Toast.show({
+                  text: error.message,
+                  position: 'bottom',
+                  buttonText: 'OK',
+                  duration: 7000
+                })
+
       this.setState({
         app: {
           ...this.state.app,
           error: 'Create user failed.',
-          loading: false
+          loading: true
       }});
     });
 
+    // Let the user correct the mistake
       this.setState({
         user: {
           ...this.state.user,
@@ -113,38 +132,69 @@ export default class Register extends Component {
         },
         app: {
           ...this.state.app,
-          loaded: true,
+          loading: false,
         }
     });
 
   };
 
+
+  sendToFirebase() {
+    return new Promise((resolve,reject) => {
+
+          // Send to storage
+          let uploadBlob = ''
+          const imageRef = storage.ref('avatar').child(`${this.state.user.uid}`)
+
+          // Database reference
+          const userDatabase = firebaseApp.database().ref(`users/${this.state.user.uid}`)
+
+          if (this.state.app.base64Avatar != '') { // If the avatar is not selected, no need to upload it, use the default one in the cloud storage
+            Blob.build(this.state.app.base64Avatar, { type: 'image/jpeg;BASE64' })
+            .then((blob) => {
+              uploadBlob = blob
+              return imageRef.put(blob, { contentType: 'image/jpeg' })
+            })
+              .then(() => {
+                uploadBlob.close()
+                return imageRef.getDownloadURL()
+              })
+              .then((url) => {
+                console.log('url: ' + url)
+                this.setState({
+                  user: {
+                    ...this.state.user,
+                    avatarSource: url
+                  }
+                })
+                userDatabase.update({avatarSource: url})
+              })
+              .catch((error) => {
+                reject(error)
+              })
+          }
+
+          // Send to database
+
+          userDatabase.update({
+            uid: this.state.user.uid,
+            email: this.state.user.email,
+            gender: this.state.user.gender,
+            dob: this.state.user.dob,
+            nickname: this.state.user.nickname,
+          })
+          resolve()
+    }
+  )
+
+  }
+
   getImage = (data) => {
     this.setState({
-      user: {
-        ...this.state.user,
+      app: {
+        ...this.state.app,
         base64Avatar: data
       }
-    })
-    //Test sending Image
-    let uploadBlob = ''
-    const sessionId = new Date().getTime()
-    const imageRef = storage.ref('avatar').child(`${sessionId}`)
-
-    Blob.build(data, { type: 'image/jpeg;BASE64' })
-    .then((blob) => {
-        uploadBlob = blob
-        return imageRef.put(blob, { contentType: 'image/jpeg' })
-      })
-      .then(() => {
-        uploadBlob.close()
-        return imageRef.getDownloadURL()
-      })
-      .then((url) => {
-        resolve(url)
-      })
-      .catch((error) => {
-        reject(error)
     })
   }
 
@@ -270,7 +320,9 @@ export default class Register extends Component {
 
           <Button block
             style={styles.OKbutton}
-            onPress={this.signup.bind(this)}>
+            onPress={
+                this.signup.bind(this) // Shoud return a Promise and show a toast
+            }>
             <Text>OK</Text>
           </Button>
         </Content>
