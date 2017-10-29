@@ -23,10 +23,10 @@ import {
   Toast
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
-import Register from './RegisterPage.js';
-import Account from './AccountPage.js';
-import firebaseApp from '../components/Firebase.js';
+import { Col, Row, Grid } from "react-native-easy-grid"
+import Register from './RegisterPage.js'
+import Account from './AccountPage.js'
+import firebaseApp from '../components/Firebase.js'
 
 export default class Login extends Component {
 
