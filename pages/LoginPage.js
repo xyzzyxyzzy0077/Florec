@@ -55,8 +55,19 @@ export default class Login extends Component {
     this.isLoading(true)
 
     firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-    .then(() => {
-      AsyncStorage.setItem('@UserData:Username', JSON.stringify(firebaseApp.auth().currentUser.username));
+    .then(async () => {
+      try {
+        await AsyncStorage.setItem('@UserData:Username', JSON.stringify(firebaseApp.auth().currentUser.displayName))
+      } catch (error) {
+        Toast.show({
+                    text: error,
+                    position: 'bottom',
+                    buttonText: 'OK',
+                    duration: 9000,
+                    type: 'danger'
+                  })
+      }
+      this.props.navigation.navigate('Main')
     })
     .catch((error) => {
 

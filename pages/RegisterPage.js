@@ -101,13 +101,51 @@ export default class Register extends Component {
           })
 
           this.sendToFirebase()
-          .then(() => Toast.show({
-                      text: 'Account created successfully',
+          .then(() => {
+            Toast.show({
+              text: 'Account created successfully',
+              position: 'bottom',
+              buttonText: 'OK',
+              duration: 3000,
+              type: 'success'
+            })
+                // Signing in
+                firebaseApp.auth().signInWithEmailAndPassword(this.state.user.email, this.state.user.password)
+                .then(() => {
+                  // Signed in successfully
+                  // Update user profile
+                  this.isLoading(true)
+                  firebaseApp.auth().currentUser.updateProfile({
+                    displayName: this.state.user.username,
+                    photoURL: this.state.user.avatarSource
+                  })
+                  // successfully updated profile
+                  .then(() => {
+                    AsyncStorage.setItem('@UserData:Username', JSON.stringify(this.state.user.username))
+                    this.props.navigation.navigate('Main')
+                  })
+                  // Cannot update profile
+                  .catch((error) => {
+                    Toast.show({
+                      text: 'Error occurred, detail: ' + error,
                       position: 'bottom',
                       buttonText: 'OK',
-                      duration: 3000,
-                      type: 'success'
-                    }))
+                      duration: 9000,
+                      type: 'danger'
+                    })
+                    this.props.navigation.navigate('Main')
+                  })
+                })
+                .catch(error => {
+                  Toast.show({
+                    text: 'Not able to login, please go back and try again, detail: ' + error,
+                    position: 'bottom',
+                    buttonText: 'OK',
+                    duration: 9000,
+                    type: 'danger'
+                  })
+                })
+                })
           .catch(error => Toast.show({
                       text: error,
                       position: 'bottom',
@@ -379,6 +417,7 @@ export default class Register extends Component {
 
           <Button block
             style={styles.OKbutton}
+            disabled = {this.state.app.loading}
             onPress={this.signup.bind(this)}>
             {((!this.state.app.loading) && (<Text>OK</Text>)) ||
               ((this.state.app.loading) && (<Spinner color='white'/>))}
