@@ -87,7 +87,7 @@ export default class Login extends Component {
   render(){
     const {navigate} = this.props.navigation
     return (
-      <Container style={styles.container}>
+      <Container>
        <Content contentContainerStyle={{flex: 1}} style={{padding: 10}}>
        <Grid style={{alignItems: 'center'}}>
         <Row>
@@ -139,9 +139,7 @@ export default class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
 
-  },
   loginButton: {
     backgroundColor: '#ff5064'
   },
