@@ -42,6 +42,9 @@ const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
+// User databse
+const userDatabase = firebaseApp.database().ref('users')
+
 export default class Register extends Component {
 
   static navigationOptions = {
@@ -59,7 +62,7 @@ export default class Register extends Component {
         password: '',
         gender: 'Please select',
         dob: '',
-        nickname: '',
+        username: '',
         avatarSource: 'empty'
       },
       app: {
@@ -102,13 +105,15 @@ export default class Register extends Component {
                       text: 'Account created successfully',
                       position: 'bottom',
                       buttonText: 'OK',
-                      duration: 3000
+                      duration: 3000,
+                      type: 'success'
                     }))
           .catch(error => Toast.show({
                       text: error,
                       position: 'bottom',
                       buttonText: 'OK',
-                      duration: 7000
+                      duration: 7000,
+                      type: 'warning'
                     }))
           .done(() => {
             this.isLoading(false)
@@ -122,18 +127,20 @@ export default class Register extends Component {
                     text: error.message,
                     position: 'bottom',
                     buttonText: 'OK',
-                    duration: 7000
+                    duration: 7000,
+                    type: 'warning'
                   })
         this.isLoading(false)
         console.log('5. this.state.app.loading: ' + this.state.app.loading)
       })
     })
-    .catch((field) => {
+    .catch((error) => {
       Toast.show({
-                  text: field != 'dob'? `Please fill in your ${field}` : 'Please fill in your birthday',
+                  text: error,
                   position: 'bottom',
                   buttonText: 'OK',
-                  duration: 7000
+                  duration: 7000,
+                  type: 'warning'
                 })
       this.isLoading(false)
     })
@@ -145,13 +152,25 @@ export default class Register extends Component {
         console.log('Here uid is checked and it is ' + this.state.user.uid)
         if(this.state.user[key] == '' || this.state.user[key] == 'Please select'){
           console.log('The key got rejected is ' + key + ' and it is ' + this.state.user[key])
-          reject(key)
+          reject(key != 'dob'? `Please fill in your ${key}` : 'Please fill in your birthday')
           return
         }
       }
-      resolve()
+      // Check the username is existing in user dabase
+      userDatabase.once('value')
+      .then( snapshot => {
+        console.log('Now the username is: ' + this.state.user.username)
+        if(snapshot.child(this.state.user.username).exists()){
+          reject('Username already exists.')
+          return
+        } else {
+          resolve()
+          }
+        })
+      .catch(error => console.log(error))
     })
   }
+
 
 
   sendToFirebase() {
@@ -161,16 +180,25 @@ export default class Register extends Component {
           const imageRef = storage.ref('avatar').child(`${this.state.user.uid}`)
 
           // Database reference
-          const userDatabase = firebaseApp.database().ref(`users/${this.state.user.uid}`)
 
-          // Send to database
-            userDatabase.update({
-              uid: this.state.user.uid,
-              email: this.state.user.email,
-              gender: this.state.user.gender,
-              dob: this.state.user.dob,
-              nickname: this.state.user.nickname,
-            })
+          userDatabase.once('value')
+          .then( snapshot => {
+            console.log('Now the username is: ' + this.state.user.username)
+            if(snapshot.child(this.state.user.username).exists()){
+              reject('Username already exists.')
+              return
+            } else {
+              userDatabase.child(this.state.user.username).update({
+                uid: this.state.user.uid,
+                email: this.state.user.email,
+                gender: this.state.user.gender,
+                dob: this.state.user.dob,
+                username: this.state.user.username,
+              })
+            }
+          })
+          .catch(error => console.log(error))
+
 
 
           if (this.state.app.base64Avatar != '') { // If the avatar is not selected, no need to upload it, use the default one in the cloud storage
@@ -193,7 +221,7 @@ export default class Register extends Component {
                     avatarSource: url
                   }
                 })
-                userDatabase.update({avatarSource: url})
+                userDatabase.child(this.state.user.username).update({avatarSource: url})
                 resolve()
               })
               .catch((error) => {
@@ -204,7 +232,7 @@ export default class Register extends Component {
             .then((data) => {
               this.isLoading(true)
               console.log('3. this.state.app.loading: ' + this.state.app.loading)
-              userDatabase.update({avatarSource: data})
+              userDatabase.child(this.state.user.username).update({avatarSource: data})
               resolve()
             })
             .catch(error => {
@@ -316,13 +344,14 @@ export default class Register extends Component {
               <Icon active name='happy' />
               <Input
                 autoCapitalize = 'none'
-                placeholder='Nickname'
-                value = {this.state.user.nickname}
-                onChangeText={
+                placeholder='Username'
+                value = {this.state.user.username}
+                maxLength = {20}
+                onChangeText = {
                   (text) => this.setState({
                     user: {
                       ...this.state.user,
-                      nickname: text
+                      username: text
                     }
                   })
                 }/>
