@@ -26,7 +26,6 @@ const navigationOptions = {
 
 var checkSignedIn = async function() {
   AsyncStorage.getItem('@UserData:Username',(err, data) => {
-    alert(data)
     if(err) {
       alert(error)
       return false
