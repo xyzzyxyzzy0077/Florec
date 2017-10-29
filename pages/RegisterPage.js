@@ -177,7 +177,7 @@ export default class Register extends Component {
     return new Promise((resolve,reject) => {
           // Send to storage
           let uploadBlob = ''
-          const imageRef = storage.ref('avatar').child(`${this.state.user.uid}`)
+          const imageRef = storage.ref('avatar').child(`${this.state.user.username}`)
 
           // Database reference
 
@@ -200,8 +200,8 @@ export default class Register extends Component {
           .catch(error => console.log(error))
 
 
-
-          if (this.state.app.base64Avatar != '') { // If the avatar is not selected, no need to upload it, use the default one in the cloud storage
+          // If the avatar is not selected, no need to upload it, use the default one in the cloud storage
+          if (this.state.app.base64Avatar != '') {
             Blob.build(this.state.app.base64Avatar, { type: 'image/jpeg;BASE64' })
             .then((blob) => {
               this.isLoading(true)

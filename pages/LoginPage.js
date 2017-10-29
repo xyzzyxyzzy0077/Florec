@@ -18,7 +18,9 @@ import {
   Input,
   Label,
   Button,
-  Text
+  Text,
+  Spinner,
+  Toast
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -38,38 +40,35 @@ export default class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      loaded: true
+      loading: false
     }
+  }
+
+  isLoading(bool) {
+    this.setState({
+      loading: bool
+    })
   }
 
   login(){
 
-    this.setState({
-      loaded: false
-    });
+    this.isLoading(true)
 
-    firebaseApp.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
+    firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then(() => {
-      this.setState({
-        error: '',
-        loading: true
-      });
-      AsyncStorage.setItem('@UserData:Email', JSON.stringify(firebaseApp.auth().currentUser.email));
-      alert('Login success!')
-      alert(firebaseApp.auth().currentUser.email)
-      this.setState({
-        email: '',
-        password: '',
-        loaded: true
-      });
+      AsyncStorage.setItem('@UserData:Username', JSON.stringify(firebaseApp.auth().currentUser.username));
     })
     .catch((error) => {
-      alert(error.message)
-      this.setState({
-        error: 'Login Failed',
-        loading: false
-      });
-    });
+
+      Toast.show({
+                  text: error.message,
+                  position: 'bottom',
+                  buttonText: 'OK',
+                  duration: 7000,
+                  type: 'danger'
+                })
+      this.isLoading(false)
+    })
 
   }
 
@@ -92,6 +91,7 @@ export default class Login extends Component {
               <Icon active name='mail' />
               <Input
               value = {this.state.email}
+              autoCapitalize = 'none'
               onChangeText={(text) => this.setState({email: text})}/>
             </Item>
             <Item floatingLabel>
@@ -99,6 +99,7 @@ export default class Login extends Component {
               <Label>Password</Label>
               <Input
               value={this.state.password}
+              autoCapitalize = 'none'
               onChangeText={(text) => this.setState({password: text})}
               secureTextEntry = {true} />
             </Item>
@@ -109,7 +110,8 @@ export default class Login extends Component {
           <Button block
             style={styles.loginButton}
             onPress={this.login.bind(this)}>
-            <Text>Login</Text>
+            {this.state.loading && <Spinner color = 'white'/>
+            || !this.state.loading && <Text>Login</Text>}
           </Button>
 
           <Button block light
