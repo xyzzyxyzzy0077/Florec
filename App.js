@@ -24,17 +24,18 @@ const navigationOptions = {
   header: null
 }
 
-let checkSignedIn = function() {
-  AsyncStorage.getItem('@UserData:Email',(err, data) => {
+var checkSignedIn = async function() {
+  AsyncStorage.getItem('@UserData:Username',(err, data) => {
+    alert(data)
     if(err) {
-      console.error('Error loading user', err)
-      return true
+      alert(error)
+      return false
     } else {
       if(data == null){
-        return true
+        return false
       }
       else {
-        return false
+        return true
       }
     }
   })
@@ -45,10 +46,10 @@ let checkSignedIn = function() {
     Register: {screen: Register},
     Account: {screen: Account}
   },{
-    initialRouteName: !checkSignedIn() ? 'Login' : 'Main'
+    initialRouteName: checkSignedIn() ? 'Main' : 'Login'
   })
 
   export default () =>
     <Root>
       <StackNav />
-    </Root>;
+    </Root>
