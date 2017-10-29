@@ -3,85 +3,112 @@ import React, {Component} from 'react'
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
   Image,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from 'react-native';
+
+import {
+  Container,
+  Header,
+  Content,
+  Icon,
+  Button,
+  Text,
+  List,
+  ListItem,
+  Left,
+  Body,
+  Right,
+  Thumbnail
+} from 'native-base';
+
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 
 import login from './LoginPage.js';
 
 import firebaseApp from '../components/Firebase.js';
 
-import styles from '../src/common-styles.js';
-
-
-
 export default class Account extends Component {
+
+    static navigationOptions = {
+      headerTitle: 'You'
+  }
+
 
   constructor(props){
 
     super(props);
     this.state = {
+      user: {
+        nickname: '',
+        email: '',
+        gender: ''
+      },
       loaded: false,
     }
-  }
-
-  componentWillMount(){
-
-    AsyncStorage.getItem('user_data').then((user_data_json) => {
-      let user_data = JSON.parse(user_data_json);
-      this.setState({
-        user: user_data,
-        loaded: true
-      });
-    });
-
   }
 
   render(){
 
     return (
-      <View style={styles.container}>
-        <Header text="Account" loaded={this.state.loaded} />
-        <View style={styles.body}>
-        {
-          this.state.user &&
-            <View style={styles.body}>
-              <View style={page_styles.email_container}>
-                <Text style={page_styles.email_text}>{this.state.user.password.email}</Text>
-              </View>
-              <Image
-                style={styles.image}
-                source={{uri: this.state.user.password.profileImageURL}}
-              />
-              <Button
-                  text="Logout"
-                  onpress={this.logout.bind(this)}
-                  button_styles={styles.primary_button}
-                  button_text_styles={styles.primary_button_text} />
-            </View>
-        }
-        </View>
-      </View>
-    );
-  }
+      <Container>
+        <Content contentContainerStyle={{flex: 1}}>
 
-  logout(){
-    AsyncStorage.removeItem('user_data').then(() => {
-      app.unauth();
-      this.props.navigator.push({
-        component: Login
-      });
-    });
+
+          <List style={{flex: 1}}>
+            <ListItem style={styles.listItem}>
+                <Thumbnail large source={{ uri: 'https://img3.doubanio.com/icon/ul34286196-36.jpg' }} />
+              <Body>
+                <Text>Username</Text>
+                <Text note>Tap your profile picture to change</Text>
+              </Body>
+            </ListItem>
+            <ListItem icon style={styles.listItem}>
+              <Left>
+                <Icon name='mail' />
+              </Left>
+              <Body>
+                <Text>Change Email address</Text>
+              </Body>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+
+            <ListItem itemDivider/>
+
+            <ListItem icon style={styles.listItem}>
+              <Left>
+                <Icon name='cloud-upload' />
+              </Left>
+            <Body>
+              <Text>My Uploads</Text>
+            </Body>
+            <Right>
+              <Icon name="arrow-forward" />
+            </Right>
+            </ListItem>
+
+          </List>
+
+          <Button full danger style={styles.logoutButton}>
+            <Text>Log out</Text>
+          </Button>
+          </Content>
+      </Container>
+    );
   }
 }
 
-const page_styles = StyleSheet.create({
-  email_container: {
-    padding: 20
+
+const styles = StyleSheet.create({
+  listItem: {
+    marginLeft: 0,
+    paddingLeft: 15
   },
-  email_text: {
-    fontSize: 18
+  logoutButton: {
+    marginBottom: Dimensions.get("window").height * 0.05
   }
 });

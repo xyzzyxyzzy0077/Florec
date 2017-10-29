@@ -1,78 +1,54 @@
+'use strict';
 import React, {Component} from 'react';
 import {
-  StyleSheet,
+  Platform,
+  AppRegistry,
   Text,
   View,
-  AppRegistry,
-  AsyncStorage
-} from 'react-native'
+  Navigator,
+  AsyncStorage,
+} from 'react-native';
 
-import firebaseApp from './components/Firebase.js'
+import {
+  Root
+} from 'native-base'
+
 import Login from './pages/LoginPage.js'
 import Register from './pages/RegisterPage.js'
 import Account from './pages/AccountPage.js'
-import Map from './pages/MapPage.js'
+import Main from './pages/MainPage.js'
+import { StackNavigator } from 'react-navigation'
+import firebaseApp from './components/Firebase.js'
 
-export default class App extends Component<{}> {
-
-  static navigationOptions = {
-    header: null
-  }
-
-  constructor(props){
-    super(props)
-    this.state = {
-      component: null,
-      loaded: false
-    }
-  }
-
-  componentWillMount(){
-
-    AsyncStorage.getItem('user_data').then((user_data_json) => {
-
-      let user_data = JSON.parse(user_data_json);
-      let component = {component: Register};
-      if(user_data != null){
-        firebaseApp.authWithCustomToken(user_data.token, (error, authData) => {
-          if(error){
-            this.setState(component);
-          }else{
-            this.setState({component: Account});
-          }
-        });
-      }else{
-        this.setState(component);
-      }
-    });
-  }
-
-
-  render() {
-    const {navigate} = this.props.navigation
-    if(this.state.component){
-      return (
-        <App >
-
-
-
-
-        <Navigator
-          initialRoute={{component: this.state.component}}
-          configureScene={() => {
-            return Navigator.SceneConfigs.FloatFromRight;
-          }}
-          renderScene={(route, navigator) => {
-            if(route.component){
-              return React.createElement(route.component, { navigator });
-            }
-          }}
-        />
-      );
-    }else{
-      return (
-        <Map />
-      );
-    }
-  }
+const navigationOptions = {
+  header: null
 }
+
+let checkSignedIn = function() {
+  AsyncStorage.getItem('@UserData:Email',(err, data) => {
+    if(err) {
+      console.error('Error loading user', err)
+      return true
+    } else {
+      if(data == null){
+        return true
+      }
+      else {
+        return false
+      }
+    }
+  })
+}
+  const StackNav = StackNavigator({
+    Main: {screen: Main},
+    Login: {screen: Login},
+    Register: {screen: Register},
+    Account: {screen: Account}
+  },{
+    initialRouteName: !checkSignedIn() ? 'Login' : 'Main'
+  })
+
+  export default () =>
+    <Root>
+      <StackNav />
+    </Root>;
