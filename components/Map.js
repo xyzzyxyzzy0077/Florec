@@ -36,10 +36,6 @@ export default class Map extends Component {
     }
   }
 
-  componentWillMount() {
-    this.getAndUpdateLocation()
-  }
-
   componentDidMount() {
     navigator.geolocation.
       getCurrentPosition(position => {
