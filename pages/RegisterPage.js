@@ -114,6 +114,7 @@ export default class Register extends Component {
                 .then(() => {
                   // Signed in successfully
                   // Update user profile
+////////////////// Why this isn't after account created///////////////////////////////////////////////////////
                   this.isLoading(true)
                   firebaseApp.auth().currentUser.updateProfile({
                     displayName: this.state.user.username,
@@ -121,6 +122,7 @@ export default class Register extends Component {
                   })
                   // successfully updated profile
                   .then(() => {
+/////////////////// Should store more information locally? ////////////////////////////////////////////////////
                     AsyncStorage.setItem('@UserData:Username', JSON.stringify(this.state.user.username))
                     this.props.navigation.navigate('Main')
                   })
@@ -157,7 +159,6 @@ export default class Register extends Component {
             this.isLoading(false)
             console.log('1. this.state.app.loading: ' + this.state.app.loading)
           })
-          // Should jump to MainPage
       })
       .catch((error) => {
 

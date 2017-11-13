@@ -40,12 +40,12 @@ export default ( Main = TabNavigator(
                  <Button
                   active={props.navigationState.index === 0}
                   onPress={() => props.navigation.navigate("Map")}>
-                   <Icon active name="compass"/>
+                   <Icon name="compass" active={props.navigationState.index === 0}/>
                  </Button>
                  <Button
                   active={props.navigationState.index === 1}
                   onPress={() => props.navigation.navigate("Account")}>
-                   <Icon name="person" />
+                   <Icon name="person" active={props.navigationState.index === 1}/>
                  </Button>
                </FooterTab>
              </Footer>

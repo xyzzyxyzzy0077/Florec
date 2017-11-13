@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  View
 } from 'react-native';
 
 import {
@@ -35,33 +36,32 @@ export default class Map extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.getAndUpdateLocation()
   }
 
-  getAndUpdateLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (data) => {
+  componentDidMount() {
+    navigator.geolocation.
+      getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords
         const region = {
-          latitude: data.coords.latitude,
-          longitude: data.coords.longitude,
-          latitudeDelta: 0.0022,
-          longitudeDelta: 0.0048,
-        };
-
-        this.setState({
-          region
-        });
-      },
-      (err) => {
-        console.log('err', err);
-      },
-      {}
-    );
+          ...this.state.region,
+          latitude,
+          longitude
+        }
+        this.setState({ region, regionSet: true })
+      })
   }
 
-  onRegionChangeComplete(region) {
-    this.setState({ region });
+  onRegionChange = (region) => {
+    if (!this.state.regionSet) return;
+    this.setState({
+      region
+    });
+  }
+
+  onRegionChangeComplete = region => {
+    this.setState({ region })
   }
 
   render() {
@@ -72,17 +72,31 @@ export default class Map extends Component {
           region={this.state.region}
           showsUserLocation = {true}
           showsMyLocationButton = {true}
-          followsUserLocation = {true}>
+          followsUserLocation = {true}
+          onRegionChange = {this.onRegionChange}>
 
           <MapView.Marker
             coordinate={{
               latitude: 31.2295,
               longitude: 121.4728,
-            }}/>
+            }}>
+            <MapView.Callout style={styles.plainView}>
+             <View>
+               <Text>This is a plain view</Text>
+             </View>
+           </MapView.Callout>
+          </MapView.Marker>
 
         </MapView>
 
-        <Button rounded
+        <View style={styles.buttonContainer}>
+          <Button rounded
+            onPress={() => {}}
+            style={styles.photoButton}>
+            <Icon name="camera"/>
+          </Button>
+        </View>
+        <Button
           onPress={() => this.getAndUpdateLocation()}
           style={styles.locateButton}>
           <Icon name="locate"/>
@@ -93,15 +107,33 @@ export default class Map extends Component {
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: Dimensions.get("window").height * 0.05,
+  },
   map: {
     flex:1
   },
   locateButton: {
     position: 'absolute',
-    bottom: Dimensions.get("window").height * 0.05,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    bottom: Dimensions.get("window").height * 0.18,
     right: Dimensions.get("window").width * 0.08,
     height: 53,
     borderRadius: 100,
     backgroundColor: 'rgba(0,0,0,0.5)'
+  },
+  photoButton: {
+    width: 80,
+    backgroundColor: '#ff5064',
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
 })
