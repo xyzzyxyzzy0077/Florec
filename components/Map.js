@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 import {
   AppRegistry,
@@ -33,20 +33,45 @@ export default class Map extends Component {
         latitudeDelta: 0.0022,
         longitudeDelta: 0.0048,
       },
+      markers: [{
+        title: 'test1',
+        coordinates: {
+          latitude: 31.2295,
+          longitude: 121.4728,
+        },
+      },
+      {
+        title: 'test2',
+        coordinates: {
+          latitude: 31.2291,
+          longitude: 121.4723,
+        },
+      },]
     }
   }
 
-  componentDidMount() {
-    navigator.geolocation.
-      getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords
-        const region = {
-          ...this.state.region,
-          latitude,
-          longitude
-        }
-        this.setState({ region, regionSet: true })
-      })
+  componentWillMount() {
+    this.getAndUpdateLocation()
+  }
+
+  getAndUpdateLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (data) => {
+      const region = {
+        latitude: data.coords.latitude,
+        longitude: data.coords.longitude,
+        latitudeDelta: 0.0022,
+        longitudeDelta: 0.0048,
+      }
+        this.setState({
+          region
+        });
+      },
+      (err) => {
+        console.log('err', err);
+      },
+      {}
+    )
   }
 
   onRegionChange = (region) => {
@@ -56,33 +81,56 @@ export default class Map extends Component {
     });
   }
 
-  onRegionChangeComplete = region => {
-    this.setState({ region })
+
+  //shouldComponentUpdate(nextProps) {
+    //return this.props.event.id !== nextProps.event.id;
+    //return true
+  //}
+
+  dropPin = (place) => {
+    console.log(place.coordinate)
+    return(
+      <MapView.Marker
+        coordinate={place.coordinate}>
+        <MapView.Callout style={styles.plainView}>
+         <View>
+           <Text>This is a plain view</Text>
+         </View>
+       </MapView.Callout>
+      </MapView.Marker>
+    )
   }
 
+
   render() {
+    const { event } = this.props
     return (
       <Container>
         <MapView
+          ref="map"
           style={styles.map}
           region={this.state.region}
           showsUserLocation = {true}
           showsMyLocationButton = {true}
           followsUserLocation = {true}
-          onRegionChange = {this.onRegionChange}>
+          onMapReady={() => {
+            this.setState({ regionSet: true });
+          }}
+          onRegionChange = {this.onRegionChange}
+          onLongPress={e => this.dropPin(e.nativeEvent)}>
 
-          <MapView.Marker
-            coordinate={{
-              latitude: 31.2295,
-              longitude: 121.4728,
-            }}>
-            <MapView.Callout style={styles.plainView}>
-             <View>
-               <Text>This is a plain view</Text>
-             </View>
-           </MapView.Callout>
-          </MapView.Marker>
 
+          {this.state.markers.map(marker => (
+            <MapView.Marker
+              coordinate={marker.coordinates}
+              title={marker.title}>
+              <MapView.Callout style={styles.plainView}>
+               <View>
+                 <Text>{marker.title}</Text>
+               </View>
+              </MapView.Callout>
+            </MapView.Marker>
+          ))}
         </MapView>
 
         <View style={styles.buttonContainer}>
@@ -132,4 +180,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center'
   },
+  plainView: {
+  }
 })
