@@ -17,6 +17,8 @@ import {
 
 import MapView from 'react-native-maps'
 
+import { uploadMarker, getMarkers } from './HandlingPins.js'
+
 export default class Map extends Component {
 
   static navigationOptions = {
@@ -33,25 +35,13 @@ export default class Map extends Component {
         latitudeDelta: 0.0022,
         longitudeDelta: 0.0048,
       },
-      markers: [{
-        title: 'test1',
-        coordinates: {
-          latitude: 31.2295,
-          longitude: 121.4728,
-        },
-      },
-      {
-        title: 'test2',
-        coordinates: {
-          latitude: 31.2291,
-          longitude: 121.4723,
-        },
-      },]
+      markers: []
     }
   }
 
   componentWillMount() {
     this.getAndUpdateLocation()
+    getMarkers(markers => this.setState({markers}))
   }
 
   getAndUpdateLocation() {
@@ -89,25 +79,40 @@ export default class Map extends Component {
 
   dropPin = (place) => {
     console.log(place.coordinate)
-    return(
-      <MapView.Marker
-        coordinate={place.coordinate}>
-        <MapView.Callout style={styles.plainView}>
-         <View>
-           <Text>This is a plain view</Text>
-         </View>
-       </MapView.Callout>
-      </MapView.Marker>
-    )
+    this.setState({
+      markers:[
+        ...this.state.markers,
+        {
+          id: 'TEMP',
+          title: 'test',
+          coordinates: place.coordinate
+        }
+      ]
+    })
+  }
+
+  onCalloutPress = () => {
+    alert('F')
+  }
+
+  onDragEnd = place => {
+    console.log(place)
   }
 
 
+  upload = async (marker) => {
+    marker.id = 'Whatever'
+    await uploadMarker({
+      UID: 'lalala',
+      marker
+    })
+  }
+
   render() {
-    const { event } = this.props
     return (
       <Container>
         <MapView
-          ref="map"
+          ref={map => (this.map = map)}
           style={styles.map}
           region={this.state.region}
           showsUserLocation = {true}
@@ -117,17 +122,39 @@ export default class Map extends Component {
             this.setState({ regionSet: true });
           }}
           onRegionChange = {this.onRegionChange}
-          onLongPress={e => this.dropPin(e.nativeEvent)}>
+          onLongPress={e => this.dropPin(e.nativeEvent)}
+          onMarkerPress={() => {
+            this.map.animateToCoordinate(
+              {
+                latitude: this.state.region.latitude + this.state.region.latitudeDelta * 0.0001,
+                longitude: this.state.region.longitude + this.state.region.longitudeDelta * 0.0001
+              },
+              0
+            )
+          }}>
 
 
           {this.state.markers.map(marker => (
             <MapView.Marker
+              ref={m => (this.m = m)}
+              pinColor = {marker.id == 'TEMP' ? 'red' : 'green'}
+              draggable = {marker.id == 'TEMP'}
               coordinate={marker.coordinates}
-              title={marker.title}>
+              title={marker.title}
+              identifier = {marker.id}
+              //onCalloutPress={this.onCalloutPress}
+              //onDeselect={() => this.m.showCallout()}
+              onDragEnd={e => this.onDragEnd(e.nativeEvent)}>
               <MapView.Callout style={styles.plainView}>
-               <View>
-                 <Text>{marker.title}</Text>
-               </View>
+               <Content>
+                 <Button
+                  iconRight
+                  transparent
+                  onPress = {() => this.upload(marker)}>
+                  <Text style = {{color: '#ff5064'}}>Continue</Text>
+                  <Icon style = {{color: '#ff5064'}} name = 'arrow-forward'/>
+                 </Button>
+               </Content>
               </MapView.Callout>
             </MapView.Marker>
           ))}
