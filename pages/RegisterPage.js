@@ -32,8 +32,8 @@ import firebaseApp from '../components/Firebase.js'
 import AvatarUpload from '../components/AvatarUpload.js'
 
 // For ActionSheet
-var BUTTONS = ['Male', 'Female', 'Cancel']
-var CANCEL_INDEX = 2
+const BUTTONS = ['Male', 'Female', 'Cancel']
+const CANCEL_INDEX = 2
 
 // For react-native-fetch-blob
 const storage = firebaseApp.storage()
@@ -123,7 +123,10 @@ export default class Register extends Component {
                   // successfully updated profile
                   .then(() => {
 /////////////////// Should store more information locally? ////////////////////////////////////////////////////
-                    AsyncStorage.setItem('@UserData:Username', JSON.stringify(this.state.user.username))
+                    AsyncStorage.setItem('@UserData:Username', this.state.user.username)
+                    AsyncStorage.setItem('@UserData:Email', this.state.user.email)
+                    AsyncStorage.setItem('@UserData:UID', this.state.user.uid)
+                    AsyncStorage.setItem('@UserData:UID', this.state.user.uid)
                     this.props.navigation.navigate('Main')
                   })
                   // Cannot update profile
@@ -248,24 +251,24 @@ export default class Register extends Component {
               uploadBlob = blob
               return imageRef.put(blob, { contentType: 'image/jpeg' })
             })
-              .then(() => {
-                uploadBlob.close()
-                return imageRef.getDownloadURL()
+            .then(() => {
+              uploadBlob.close()
+              return imageRef.getDownloadURL()
+            })
+            .then((url) => {
+              console.log('url: ' + url)
+              this.setState({
+                user: {
+                  ...this.state.user,
+                  avatarSource: url
+                }
               })
-              .then((url) => {
-                console.log('url: ' + url)
-                this.setState({
-                  user: {
-                    ...this.state.user,
-                    avatarSource: url
-                  }
-                })
-                userDatabase.child(this.state.user.username).update({avatarSource: url})
-                resolve()
-              })
-              .catch((error) => {
-                reject(error)
-              })
+              userDatabase.child(this.state.user.username).update({avatarSource: url})
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
           } else {
             storage.ref('avatar').child('defaultAvatar.png').getDownloadURL()
             .then((data) => {

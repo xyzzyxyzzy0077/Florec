@@ -12,12 +12,15 @@ import {
   Content,
   Icon,
   Button,
-  Text
+  Text,
+  Left,
+  Body,
+  Right
 } from 'native-base';
 
 import MapView from 'react-native-maps'
 
-import { uploadMarker, getMarkers } from './HandlingPins.js'
+import { getMarkers } from './HandlingPins.js'
 
 export default class Map extends Component {
 
@@ -35,8 +38,10 @@ export default class Map extends Component {
         latitudeDelta: 0.0022,
         longitudeDelta: 0.0048,
       },
-      markers: []
+      markers: [],
+      tempMarker: {}
     }
+    this.renderTempMarker = this.renderTempMarker.bind(this)
   }
 
   componentWillMount() {
@@ -47,15 +52,15 @@ export default class Map extends Component {
   getAndUpdateLocation() {
     navigator.geolocation.getCurrentPosition(
       (data) => {
-      const region = {
-        latitude: data.coords.latitude,
-        longitude: data.coords.longitude,
-        latitudeDelta: 0.0022,
-        longitudeDelta: 0.0048,
-      }
-        this.setState({
-          region
-        });
+        const region = {
+          latitude: data.coords.latitude,
+          longitude: data.coords.longitude,
+          latitudeDelta: 0.0022,
+          longitudeDelta: 0.0048,
+        }
+          this.setState({
+            region
+          });
       },
       (err) => {
         console.log('err', err);
@@ -80,15 +85,12 @@ export default class Map extends Component {
   dropPin = (place) => {
     console.log(place.coordinate)
     this.setState({
-      markers:[
-        ...this.state.markers,
+      tempMarker:
         {
-          id: 'TEMP',
-          title: 'test',
-          coordinates: place.coordinate
+          coordinates: place.coordinate,
+          timestamp: new Date().toISOString()
         }
-      ]
-    })
+    }, () => console.log(this.state.tempMarker))
   }
 
   onCalloutPress = () => {
@@ -97,15 +99,49 @@ export default class Map extends Component {
 
   onDragEnd = place => {
     console.log(place)
+    this.setState({
+      tempMarker:
+        {
+          coordinates: place.coordinate,
+          timestamp: new Date().toISOString()
+        }
+    })
   }
 
-
-  upload = async (marker) => {
-    marker.id = 'Whatever'
-    await uploadMarker({
-      UID: 'lalala',
-      marker
+  deleteTemp = () => {
+    this.setState({
+      tempMarker: {}
     })
+  }
+
+  renderTempMarker(t) {
+    if (Object.getOwnPropertyNames(t).length != 0) {
+      return <MapView.Marker
+        ref={m => (this.m = m)}
+        pinColor = {'red'}
+        draggable = {true}
+        coordinate={t.coordinates}
+        identifier = {t.id}
+        onDragEnd={e => this.onDragEnd(e.nativeEvent)}>
+        <MapView.Callout style={styles.plainView}>
+         <Content contentContainerStyle ={{flex: 1,flexDirection: 'column',justifyContent: 'space-between',}}>
+           <Button iconRight block small style={styles.continueButton}
+            onPress = {() => {
+              this.props.navigation.navigate('UploadMarker', {tempMarker: this.state.tempMarker})
+              this.setState({tempMarker:{}})
+            }}>
+              <Text style = {{color: 'white'}}>Continue</Text>
+              <Icon style = {{color: 'white'}} name = 'arrow-dropright'/>
+           </Button>
+           <Button iconRight block small style={styles.cancelButton}
+            onPress = {this.deleteTemp}>
+              <Text style = {{color: 'white'}}>Cancel   </Text>
+              <Icon style = {{color: 'white'}} name = 'close-circle'/>
+           </Button>
+         </Content>
+        </MapView.Callout>
+      </MapView.Marker>
+    }
   }
 
   render() {
@@ -123,54 +159,39 @@ export default class Map extends Component {
           }}
           onRegionChange = {this.onRegionChange}
           onLongPress={e => this.dropPin(e.nativeEvent)}
-          onMarkerPress={() => {
+          onMarkerSelect={() => {
             this.map.animateToCoordinate(
               {
-                latitude: this.state.region.latitude + this.state.region.latitudeDelta * 0.0001,
-                longitude: this.state.region.longitude + this.state.region.longitudeDelta * 0.0001
+                latitude: this.state.region.latitude + this.state.region.latitudeDelta * 0.00001,
+                longitude: this.state.region.longitude + this.state.region.longitudeDelta * 0.00001
               },
-              0
+              0.3
             )
           }}>
 
+          {this.renderTempMarker(this.state.tempMarker)}
 
           {this.state.markers.map(marker => (
             <MapView.Marker
               ref={m => (this.m = m)}
               pinColor = {marker.id == 'TEMP' ? 'red' : 'green'}
-              draggable = {marker.id == 'TEMP'}
+              draggable = {false}
               coordinate={marker.coordinates}
               title={marker.title}
-              identifier = {marker.id}
-              //onCalloutPress={this.onCalloutPress}
-              //onDeselect={() => this.m.showCallout()}
-              onDragEnd={e => this.onDragEnd(e.nativeEvent)}>
+              identifier = {marker.id}>
               <MapView.Callout style={styles.plainView}>
                <Content>
-                 <Button
-                  iconRight
-                  transparent
-                  onPress = {() => this.upload(marker)}>
-                  <Text style = {{color: '#ff5064'}}>Continue</Text>
-                  <Icon style = {{color: '#ff5064'}} name = 'arrow-forward'/>
-                 </Button>
+                 <Text>{marker.title}</Text>
                </Content>
               </MapView.Callout>
             </MapView.Marker>
           ))}
         </MapView>
 
-        <View style={styles.buttonContainer}>
-          <Button rounded
-            onPress={() => {}}
-            style={styles.photoButton}>
-            <Icon name="camera"/>
-          </Button>
-        </View>
         <Button
           onPress={() => this.getAndUpdateLocation()}
           style={styles.locateButton}>
-          <Icon name="locate"/>
+          <Icon name="locate" style = {{color:'black'}}/>
         </Button>
       </Container>
     )
@@ -195,11 +216,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-end',
     justifyContent: 'center',
-    bottom: Dimensions.get("window").height * 0.18,
+    bottom: Dimensions.get("window").height * 0.08,
     right: Dimensions.get("window").width * 0.08,
     height: 53,
     borderRadius: 100,
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: 'white',
+    shadowColor: 'grey',
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowRadius: 5,
+    shadowOpacity: 1.0
   },
   photoButton: {
     width: 80,
@@ -208,5 +236,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   plainView: {
+  },
+  continueButton: {
+    backgroundColor: '#ff5064',
+    marginBottom: 5
+  },
+  cancelButton: {
+    backgroundColor: 'grey'
   }
 })

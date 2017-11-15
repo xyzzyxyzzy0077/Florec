@@ -6,15 +6,18 @@ const markerDatabase = firebaseApp.database().ref('markers')
 export const uploadMarker =
   ({
     UID,
-    marker
+    username,
+    marker,
+    photo,
+    title,
+    description
   }) =>
   {
     if (UID === null) {
       throw new Error('UID is required');
     }
-    const timestamp = new Date().toISOString()
     console.log(marker)
-    return markerDatabase.child(UID).push({...marker,timestamp})
+    return markerDatabase.child(username).push({...marker, UID, username, photo,title, description})
   }
 
 let currentQuery;
