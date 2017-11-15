@@ -44,13 +44,15 @@ export const getMarkers = (callback, maxMessages = 10240) => {
     const markers = []
     for (const UID in data) {
       for (const key in data[UID]){
-        const {title, coordinates, timestamp} = data[UID][key]
+        const {title, coordinates, timestamp, photo, username} = data[UID][key]
         markers.push({
           key,
           id: key + UID,
           UID,
           title,
           coordinates,
+          photo,
+          username,
           timestamp: timestamp ? new Date(timestamp) : new Date(2000, 0, 1)
         })
       }

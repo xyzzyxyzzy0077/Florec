@@ -4,7 +4,8 @@ import {
   AppRegistry,
   StyleSheet,
   Dimensions,
-  View
+  View,
+  Image
 } from 'react-native';
 
 import {
@@ -39,28 +40,29 @@ export default class Map extends Component {
         longitudeDelta: 0.0048,
       },
       markers: [],
-      tempMarker: {}
+      tempMarker: {},
+      selectedMarker: {}
     }
     this.renderTempMarker = this.renderTempMarker.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getAndUpdateLocation()
     getMarkers(markers => this.setState({markers}))
   }
 
   getAndUpdateLocation() {
     navigator.geolocation.getCurrentPosition(
-      (data) => {
+      data => {
         const region = {
           latitude: data.coords.latitude,
           longitude: data.coords.longitude,
           latitudeDelta: 0.0022,
           longitudeDelta: 0.0048,
         }
-          this.setState({
-            region
-          });
+        this.setState({
+          region
+        })
       },
       (err) => {
         console.log('err', err);
@@ -93,6 +95,23 @@ export default class Map extends Component {
     }, () => console.log(this.state.tempMarker))
   }
 
+  animateToMarker = (ref) => {
+
+    if(Object.getOwnPropertyNames(this.state.selectedMarker).length != 0){
+      console.log(this.state.selectedMarker)
+
+      this.map.animateToCoordinate(
+        {
+          latitude: this.state.selectedMarker.coordinate.latitude + this.state.region.latitudeDelta * 0.00001,
+          longitude: this.state.selectedMarker.coordinate.longitude + this.state.region.latitudeDelta * 0.00001,
+        },
+        300
+      )
+      ref.showCallout()
+    }
+
+  }
+
   onCalloutPress = () => {
     alert('F')
   }
@@ -122,13 +141,14 @@ export default class Map extends Component {
         draggable = {true}
         coordinate={t.coordinates}
         identifier = {t.id}
+        onSelect={e => this.setState({selectedMarker: e.nativeEvent}, () => this.animateToMarker())}
+        //onDeselect={() => this.setState({selectedMarker:{}})}
         onDragEnd={e => this.onDragEnd(e.nativeEvent)}>
         <MapView.Callout style={styles.plainView}>
          <Content contentContainerStyle ={{flex: 1,flexDirection: 'column',justifyContent: 'space-between',}}>
            <Button iconRight block small style={styles.continueButton}
             onPress = {() => {
               this.props.navigation.navigate('UploadMarker', {tempMarker: this.state.tempMarker})
-              this.setState({tempMarker:{}})
             }}>
               <Text style = {{color: 'white'}}>Continue</Text>
               <Icon style = {{color: 'white'}} name = 'arrow-dropright'/>
@@ -158,31 +178,33 @@ export default class Map extends Component {
             this.setState({ regionSet: true });
           }}
           onRegionChange = {this.onRegionChange}
-          onLongPress={e => this.dropPin(e.nativeEvent)}
-          onMarkerSelect={() => {
-            this.map.animateToCoordinate(
-              {
-                latitude: this.state.region.latitude + this.state.region.latitudeDelta * 0.00001,
-                longitude: this.state.region.longitude + this.state.region.longitudeDelta * 0.00001
-              },
-              0.3
-            )
-          }}>
+          onLongPress={e => this.dropPin(e.nativeEvent)}>
 
           {this.renderTempMarker(this.state.tempMarker)}
 
           {this.state.markers.map(marker => (
             <MapView.Marker
-              ref={m => (this.m = m)}
-              pinColor = {marker.id == 'TEMP' ? 'red' : 'green'}
+              key={marker.id}
+              ref={marker.id}
+              onPress={() => this.refs[marker.id].hideCallout()}
+              onSelect={e => this.setState({selectedMarker: e.nativeEvent}, () => this.animateToMarker(this.refs[marker.id]))}
+              Deselect={() => this.setState({selectedMarker:{}})}
+              pinColor = {'green'}
               draggable = {false}
               coordinate={marker.coordinates}
               title={marker.title}
               identifier = {marker.id}>
               <MapView.Callout style={styles.plainView}>
-               <Content>
-                 <Text>{marker.title}</Text>
-               </Content>
+               <View style={styles.customCallout}>
+               <Image
+                 style = {{width: 80, height: 80}}
+                 resizeMode='cover'
+                 source={require('../src/imagePlaceholder.png')}/>
+               <View>
+                 <Text style = {{}}>{marker.title}</Text>
+                 <Text note style = {{}}>{marker.username}</Text>
+               </View>
+               </View>
               </MapView.Callout>
             </MapView.Marker>
           ))}
@@ -243,5 +265,10 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: 'grey'
+  },
+  customCallout: {
+    flex: 1,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width*0.8
   }
 })
