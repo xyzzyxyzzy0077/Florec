@@ -41,7 +41,8 @@ export default class Map extends Component {
       },
       markers: [],
       tempMarker: {},
-      selectedMarker: {}
+      selectedMarker: {},
+      mapIsMoving: false
     }
     this.renderTempMarker = this.renderTempMarker.bind(this)
   }
@@ -74,7 +75,8 @@ export default class Map extends Component {
   onRegionChange = (region) => {
     if (!this.state.regionSet) return;
     this.setState({
-      region
+      region,
+      mapIsMoving: true
     });
   }
 
@@ -96,7 +98,6 @@ export default class Map extends Component {
   }
 
   animateToMarker = (ref) => {
-
     if(Object.getOwnPropertyNames(this.state.selectedMarker).length != 0){
       console.log(this.state.selectedMarker)
 
@@ -105,11 +106,9 @@ export default class Map extends Component {
           latitude: this.state.selectedMarker.coordinate.latitude + this.state.region.latitudeDelta * 0.00001,
           longitude: this.state.selectedMarker.coordinate.longitude + this.state.region.latitudeDelta * 0.00001,
         },
-        300
+        0,
       )
-      ref.showCallout()
     }
-
   }
 
   onCalloutPress = () => {
@@ -133,6 +132,18 @@ export default class Map extends Component {
     })
   }
 
+  reshowCallout = (ref) => {
+    ref.showCallout()
+    this.map.animateToCoordinate(
+      {
+        latitude: this.state.region.latitude + this.state.region.latitudeDelta * 0.0000001,
+        longitude: this.state.region.longitude + this.state.region.latitudeDelta * 0.0000001,
+      },
+      0,
+    )
+  }
+
+
   renderTempMarker(t) {
     if (Object.getOwnPropertyNames(t).length != 0) {
       return <MapView.Marker
@@ -142,7 +153,7 @@ export default class Map extends Component {
         coordinate={t.coordinates}
         identifier = {t.id}
         onSelect={e => this.setState({selectedMarker: e.nativeEvent}, () => this.animateToMarker())}
-        //onDeselect={() => this.setState({selectedMarker:{}})}
+        onDeselect={() => this.setState({selectedMarker:{}})}
         onDragEnd={e => this.onDragEnd(e.nativeEvent)}>
         <MapView.Callout style={styles.plainView}>
          <Content contentContainerStyle ={{flex: 1,flexDirection: 'column',justifyContent: 'space-between',}}>
@@ -178,6 +189,7 @@ export default class Map extends Component {
             this.setState({ regionSet: true });
           }}
           onRegionChange = {this.onRegionChange}
+          onRegionChangeComplete = {() => this.setState({mapIsMoving: false})}
           onLongPress={e => this.dropPin(e.nativeEvent)}>
 
           {this.renderTempMarker(this.state.tempMarker)}
@@ -186,7 +198,7 @@ export default class Map extends Component {
             <MapView.Marker
               key={marker.id}
               ref={marker.id}
-              onPress={() => this.refs[marker.id].hideCallout()}
+              onPress={() => this.reshowCallout(this.refs[marker.id])}
               onSelect={e => this.setState({selectedMarker: e.nativeEvent}, () => this.animateToMarker(this.refs[marker.id]))}
               Deselect={() => this.setState({selectedMarker:{}})}
               pinColor = {'green'}
@@ -194,15 +206,16 @@ export default class Map extends Component {
               coordinate={marker.coordinates}
               title={marker.title}
               identifier = {marker.id}>
-              <MapView.Callout style={styles.plainView}>
-               <View style={styles.customCallout}>
+              <MapView.Callout style={styles.callout}>
+               <View style={styles.calloutView}>
                <Image
-                 style = {{width: 80, height: 80}}
+                 style = {styles.calloutImage}
                  resizeMode='cover'
-                 source={require('../src/imagePlaceholder.png')}/>
-               <View>
-                 <Text style = {{}}>{marker.title}</Text>
-                 <Text note style = {{}}>{marker.username}</Text>
+                 source={{uri: marker.photo}}/>
+               <View style={styles.calloutTextContainer}>
+                 <Text numberOfLines={2} style = {{fontWeight: 'bold', borderBottomWidth: 1}}>{marker.title}</Text>
+                 <View style={{borderBottomWidth: 1, borderColor: 'lightgrey'}}/>
+                 <Text numberOfLines={1} note style = {{}}>{marker.username}</Text>
                </View>
                </View>
               </MapView.Callout>
@@ -257,7 +270,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center'
   },
-  plainView: {
+  calloutView: {
+    margin: -13,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  calloutImage: {
+    width: Dimensions.get('window').width*0.3,
+    height: Dimensions.get('window').width*0.3
+  },
+  calloutTextContainer: {
+    width: Dimensions.get('window').width*0.25,
+    marginVertical: 7,
+    marginHorizontal: 5,
+    justifyContent: 'center'
+  },
+  callout: {
+    width: Dimensions.get('window').width*0.55
   },
   continueButton: {
     backgroundColor: '#ff5064',
@@ -266,9 +295,5 @@ const styles = StyleSheet.create({
   cancelButton: {
     backgroundColor: 'grey'
   },
-  customCallout: {
-    flex: 1,
-    flexDirection: 'row',
-    width: Dimensions.get('window').width*0.8
-  }
+
 })
