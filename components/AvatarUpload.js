@@ -10,7 +10,6 @@ import {
 
 import PhotoUpload from 'react-native-photo-upload'
 
-
 export default class ImageUpload extends Component {
 
   constructor(props) {
@@ -37,7 +36,7 @@ export default class ImageUpload extends Component {
          <Image
            style={styles.avatar}
            resizeMode='cover'
-           source={require('../src/defaultAvatar.png')}/>
+           defaultSource={require('../src/defaultAvatar.png')}/>
 
        </PhotoUpload>
     )

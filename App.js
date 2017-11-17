@@ -18,6 +18,7 @@ import Register from './pages/RegisterPage.js'
 import Account from './pages/AccountPage.js'
 import Main from './pages/MainPage.js'
 import UploadMarker from './pages/UploadMarkerPage.js'
+import Detail from './pages/DetailPage.js'
 import { StackNavigator } from 'react-navigation'
 import firebaseApp from './components/Firebase.js'
 
@@ -45,10 +46,11 @@ var checkSignedIn = async function() {
     Login: {screen: Login},
     Register: {screen: Register},
     Account: {screen: Account},
-    UploadMarker: {screen: UploadMarker}
+    UploadMarker: {screen: UploadMarker},
+    Detail: {screen: Detail}
   },{
     headerMode: 'screen',
-    initialRouteName: checkSignedIn() ? 'Main' : 'Login'
+    initialRouteName: checkSignedIn() ? 'Account' : 'Login'
   })
 
   export default () =>

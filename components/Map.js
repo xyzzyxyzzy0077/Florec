@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   View,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -201,16 +202,19 @@ export default class Map extends Component {
               onPress={() => this.reshowCallout(this.refs[marker.id])}
               onSelect={e => this.setState({selectedMarker: e.nativeEvent}, () => this.animateToMarker(this.refs[marker.id]))}
               Deselect={() => this.setState({selectedMarker:{}})}
+              onCalloutPress={() => this.props.navigation.navigate('Detail', {marker: marker})}
               pinColor = {'green'}
               draggable = {false}
               coordinate={marker.coordinates}
               title={marker.title}
               identifier = {marker.id}>
               <MapView.Callout style={styles.callout}>
+              <TouchableOpacity>
                <View style={styles.calloutView}>
                <Image
                  style = {styles.calloutImage}
                  resizeMode='cover'
+                 defaultSource={require('../src/PicLoading2.gif')}
                  source={{uri: marker.photo}}/>
                <View style={styles.calloutTextContainer}>
                  <Text numberOfLines={2} style = {{fontWeight: 'bold', borderBottomWidth: 1}}>{marker.title}</Text>
@@ -218,6 +222,7 @@ export default class Map extends Component {
                  <Text numberOfLines={1} note style = {{}}>{marker.username}</Text>
                </View>
                </View>
+               </TouchableOpacity>
               </MapView.Callout>
             </MapView.Marker>
           ))}
