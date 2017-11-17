@@ -10,33 +10,33 @@ import {
 
 import PhotoUpload from 'react-native-photo-upload'
 
-export default class ImageUpload extends Component {
+
+export default class PicUpload extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {}
   }
 
   componentDidMount() {}
 
-  passImage = (avatar) => {
-    this.props.getImage(avatar)
+  passImage = (pic) => {
+    this.props.getImage(pic)
   }
 
   render() {
     return (
       <PhotoUpload
-        onPhotoSelect={avatar => {
-         if (avatar) {
-           this.passImage(avatar)
+        onPhotoSelect={pic => {
+         if (pic) {
+           this.passImage(pic)
          }
        }}>
 
          <Image
-           style={styles.avatar}
+           style={styles.pic}
            resizeMode='cover'
-           defaultSource={require('../src/defaultAvatar.png')}/>
+           source={require('../src/imagePlaceholder.png')}/>
 
        </PhotoUpload>
     )
@@ -44,9 +44,8 @@ export default class ImageUpload extends Component {
 }
 
 const styles = StyleSheet.create({
-  avatar: {
-    width: Dimensions.get("window").width * 0.3,
-    height: Dimensions.get("window").width * 0.3,
-    borderRadius: Dimensions.get("window").width * 0.3/2
+  pic: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").width,
   }
 })

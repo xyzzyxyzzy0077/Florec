@@ -25,29 +25,27 @@ import {
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-
 import login from './LoginPage.js';
-
 import firebaseApp from '../components/Firebase.js';
-
 export default class Account extends Component {
 
     static navigationOptions = {
-      headerTitle: 'You'
+      headerTitle: 'Me'
   }
 
 
   constructor(props){
 
-    super(props);
+    super(props)
     this.state = {
-      user: {
-        nickname: '',
-        email: '',
-        gender: ''
-      },
-      loaded: false,
+      photoURL: '',
+      username: '',
+      gender: ''
     }
+  }
+
+  componentWillMount() {
+
   }
 
   render(){
@@ -55,11 +53,9 @@ export default class Account extends Component {
     return (
       <Container>
         <Content contentContainerStyle={{flex: 1}}>
-
-
           <List style={{flex: 1}}>
             <ListItem style={styles.listItem}>
-                <Thumbnail large source={{ uri: 'https://img3.doubanio.com/icon/ul34286196-36.jpg' }} />
+                
               <Body>
                 <Text>Username</Text>
                 <Text note>Tap your profile picture to change</Text>
@@ -70,7 +66,7 @@ export default class Account extends Component {
                 <Icon name='mail' />
               </Left>
               <Body>
-                <Text>Change Email address</Text>
+                <Text>Change Password</Text>
               </Body>
               <Right>
                 <Icon name="arrow-forward" />
@@ -93,7 +89,7 @@ export default class Account extends Component {
 
           </List>
 
-          <Button full danger style={styles.logoutButton}>
+          <Button block danger style={styles.logoutButton}>
             <Text>Log out</Text>
           </Button>
           </Content>
@@ -109,6 +105,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15
   },
   logoutButton: {
+    marginHorizontal: 10,
     marginBottom: Dimensions.get("window").height * 0.05
   }
 });
