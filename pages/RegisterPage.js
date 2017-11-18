@@ -126,7 +126,7 @@ export default class Register extends Component {
                     AsyncStorage.setItem('@UserData:Username', this.state.user.username)
                     AsyncStorage.setItem('@UserData:Email', this.state.user.email)
                     AsyncStorage.setItem('@UserData:UID', this.state.user.uid)
-                    AsyncStorage.setItem('@UserData:UID', this.state.user.uid)
+                    AsyncStorage.setItem('@UserData:Avatar', this.state.user.avatarSource)
                     this.props.navigation.navigate('Main')
                   })
                   // Cannot update profile
