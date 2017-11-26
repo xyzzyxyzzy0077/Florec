@@ -1,4 +1,3 @@
-'use strict';
 import React, {Component} from 'react'
 import {
   AppRegistry,
@@ -57,7 +56,7 @@ export default class Login extends Component {
     firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then(async () => {
       try {
-        await AsyncStorage.setItem('@UserData:Username', JSON.stringify(firebaseApp.auth().currentUser.displayName))
+        await AsyncStorage.setItem('@UserData:Username', firebaseApp.auth().currentUser.displayName)
       } catch (error) {
         Toast.show({
                     text: error,
