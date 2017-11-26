@@ -1,4 +1,3 @@
-'use strict'
 import React, {Component} from 'react'
 import {
   AppRegistry,
@@ -32,7 +31,8 @@ const storage = firebaseApp.storage()
 export default class Account extends Component {
 
   static navigationOptions = {
-      headerTitle: 'Me'
+      headerTitle: 'Me',
+      headerLeft: null
   }
 
   constructor(props){

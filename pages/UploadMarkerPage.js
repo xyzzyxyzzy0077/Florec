@@ -1,4 +1,3 @@
-'use strict';
 import React, {Component} from 'react'
 import {
   AppRegistry,
@@ -122,7 +121,7 @@ export default class UploadMarker extends Component {
       this.upload(this.state.marker)
     })
     .then(() => {
-      this.props.navigation.goBack()
+      this.props.navigation.navigate('Main')
     })
     .catch(error => {
       this.isLoading(false)

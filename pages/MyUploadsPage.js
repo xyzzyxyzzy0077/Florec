@@ -35,6 +35,7 @@ export default class MyUploads extends Component {
     title: `${navigation.state.params.username}'s Uploads`,
     headerTitleStyle: {color: 'black'},
     headerTintColor: 'black',
+    headerBackTitle: null
   })
 
   constructor(props){
@@ -60,12 +61,12 @@ export default class MyUploads extends Component {
     currentQuery = markerDatabase.child(`${this.props.navigation.state.params.username}`).limitToLast(maxMessages);
     currentCallback = callback;
 
-    currentQuery.once('value', snapshot => {
+    currentQuery.orderByChild('timestamp').once('value', snapshot => {
       const data = snapshot.val()
       const markers = []
       for (const key in data){
         const {title, coordinates, timestamp, photo, username,description} = data[key]
-        markers.push({
+        markers.unshift({
           key,
           id: key,
           title,
